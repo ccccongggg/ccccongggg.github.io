@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>印贤聪 · 个人成长档案知识库</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ink: #2A2018;
+    --sub: #6B5D4E;
+    --orange: #E07020;
+    --cream: #FBDBAF;
+    --paper: #FFFFFF;
+    --bg: #F7F2EA;
+    --line: #E8DFD2;
+  }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 15px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 28px 80px; }
+
+  /* ===== 封面 ===== */
+  .cover {
+    padding: 64px 0 40px;
+    display: flex;
+    gap: 36px;
+    align-items: center;
+    border-bottom: 3px solid var(--orange);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .cover-photo {
+    width: 168px;
+    height: 196px;
+    border-radius: 16px;
+    background: linear-gradient(160deg, #241408, #63300f);
+    background-size: cover;
+    background-position: center top;
+    box-shadow: 0 14px 40px rgba(0,0,0,.18);
+    flex: 0 0 auto;
+  }
+  .cover-info h1 { font-size: 34px; letter-spacing: 2px; }
+  .cover-info .en { font-size: 13px; letter-spacing: 4px; color: var(--sub); margin-top: 4px; }
+  .cover-info .tags { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { font-size: 12.5px; background: #FDF3E7; color: #A34A10; border: 1px solid #F0D9BC; border-radius: 999px; padding: 4px 12px; }
+  .cover-info .meta { margin-top: 14px; font-size: 13.5px; color: var(--sub); }
+
+  /* ===== 工具栏 ===== */
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 8px; }
+  .toolbar a, .toolbar button {
+    font-size: 12.5px; text-decoration: none; color: #A34A10; background: #FDF3E7;
+    border: 1px solid #F0D9BC; border-radius: 999px; padding: 6px 14px; cursor: pointer;
+  }
+  .toolbar a:hover, .toolbar button:hover { background: #FAE7CF; }
+
+  /* ===== 章节 ===== */
+  section { margin-top: 44px; }
+  h2 {
+    font-size: 21px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  h2 .no { color: var(--orange); font-size: 13px; letter-spacing: 2px; font-weight: 700; }
+  h2::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+  .sec-desc { color: var(--sub); font-size: 13.5px; margin-bottom: 18px; }
+  h3 { font-size: 16px; margin: 22px 0 10px; color: #7A4210; }
+  h3::before { content: '▎'; color: var(--orange); }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 4px 18px rgba(90, 60, 30, 0.06);
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* 基础信息表 */
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px 22px; }
+  .info-grid .kv { border-left: 3px solid #F0D9BC; padding-left: 10px; }
+  .kv b { display: block; font-size: 11.5px; color: var(--sub); font-weight: 500; letter-spacing: 1px; }
+  .kv span { font-size: 14.5px; font-weight: 600; }
+
+  /* 雷达图 */
+  .radar-flex { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
+  .radar-flex svg { flex: 0 0 auto; }
+  .radar-legend { flex: 1; min-width: 240px; }
+  .legend-row { display: flex; justify-content: space-between; padding: 8px 2px; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .legend-row b { color: var(--orange); }
+  .legend-note { font-size: 12.5px; color: var(--sub); margin-top: 12px; }
+
+  /* 时间线 */
+  .timeline { position: relative; padding-left: 30px; }
+  .timeline::before { content: ''; position: absolute; left: 9px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(#E07020, #F0D9BC); border-radius: 2px; }
+  .tl-item { position: relative; padding-bottom: 26px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -27px; top: 6px; width: 12px; height: 12px;
+    background: var(--bg); border: 3px solid var(--orange); border-radius: 50%;
+  }
+  .tl-when { font-size: 12px; color: var(--sub); letter-spacing: 1px; }
+  .tl-title { font-size: 15.5px; font-weight: 700; margin: 2px 0; }
+  .tl-title .badge { font-size: 10.5px; color: #fff; background: var(--orange); border-radius: 999px; padding: 2px 9px; vertical-align: 2px; margin-left: 8px; font-weight: 500; }
+  .tl-desc { font-size: 14px; color: #4A3E30; }
+  .tl-tags { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tl-tags span { font-size: 11px; background: #FDF3E7; border: 1px solid #F0D9BC; color: #A34A10; border-radius: 6px; padding: 2px 8px; }
+
+  /* 项目卡 */
+  .proj {
+    display: flex; gap: 20px;
+    background: linear-gradient(135deg, #1C0F07, #3A2410);
+    border-radius: 16px; padding: 22px; margin-bottom: 18px;
+    color: #FBDBAF; border: 1px solid #3A2A18;
+  }
+  .proj .art-box { flex: 0 0 132px; display: grid; place-items: start; }
+  .proj .art-box svg { width: 120px; height: 120px; }
+  .proj-body { flex: 1; min-width: 0; }
+  .proj-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+  .proj-head b { font-size: 16.5px; letter-spacing: 0.5px; }
+  .proj-head span { font-size: 12px; color: #D9B98A; }
+  .proj p { font-size: 13.5px; line-height: 1.8; color: #E8D3AE; margin-top: 6px; }
+  .proj p b { color: #FFD9A8; }
+  .proj a { color: #FFB37A; font-size: 12.5px; word-break: break-all; }
+  .proj .none { color: #8A7355; font-size: 12.5px; }
+  @media (max-width: 700px) { .proj { flex-direction: column; } }
+
+  /* 证书墙 */
+  .certs { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .cert { display: flex; gap: 12px; align-items: flex-start; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .cert .medal { flex: 0 0 34px; height: 34px; border-radius: 50%; background: #FDF3E7; border: 1px solid #F0D9BC; display: grid; place-items: center; color: var(--orange); font-size: 15px; }
+  .cert b { font-size: 13.5px; display: block; }
+  .cert i { font-style: normal; font-size: 12px; color: var(--sub); }
+  .cert .yr { float: right; font-size: 11.5px; color: var(--orange); font-weight: 700; }
+
+  /* 工厂 KB 表格 */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0 16px; background: var(--paper); }
+  th, td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: #FDF3E7; color: #7A4210; font-size: 12.5px; }
+  .lv { font-weight: 700; white-space: nowrap; }
+  .lv.full { color: #1D8A4E; } .lv.half { color: #C97A10; } .lv.none { color: #C0392B; }
+
+  /* 观点卡 */
+  .view { border-left: 3px solid var(--orange); background: var(--paper); border-radius: 0 12px 12px 0; padding: 14px 18px; margin-bottom: 14px; }
+  .view b { display: block; font-size: 14.5px; margin-bottom: 4px; }
+  .view p { font-size: 13.8px; color: #4A3E30; }
+
+  /* 视频素材位 */
+  .video-slot {
+    display: flex; gap: 16px; align-items: center;
+    border: 2px dashed #E4C89E; border-radius: 14px;
+    background: #FFFCF6; padding: 16px 20px; margin-bottom: 12px;
+  }
+  .video-slot .play {
+    flex: 0 0 46px; height: 46px; border-radius: 50%;
+    background: var(--orange); color: #fff; display: grid; place-items: center; font-size: 17px;
+  }
+  .video-slot b { font-size: 14px; display: block; }
+  .video-slot p { font-size: 12.5px; color: var(--sub); margin-top: 2px; }
+  .video-slot code { background: #F4EAD8; border-radius: 5px; padding: 1px 6px; font-size: 11.5px; }
+
+  /* 使用说明 */
+  .howto { background: #FFF9EE; border: 1px solid #F0D9BC; border-radius: 14px; padding: 18px 22px; }
+  .howto ol { padding-left: 20px; font-size: 13.8px; }
+  .howto li { margin-bottom: 6px; }
+
+  footer { margin-top: 60px; padding: 24px 0; border-top: 1px solid var(--line); color: var(--sub); font-size: 12.5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  /* ===== 打印 ===== */
+  @media print {
+    body { background: #fff; }
+    .toolbar { display: none; }
+    .wrap { max-width: 100%; padding: 0 6mm; }
+    section { page-break-inside: avoid; }
+    .proj, .card, .cert, .video-slot, .view { box-shadow: none; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 封面 ===== -->
+  <div class="cover">
+    <div class="cover-photo" style="background-image:url('assets/avatar-processed.png')"></div>
+    <div class="cover-info">
+      <h1>印贤聪</h1>
+      <div class="en">YIN XIANCONG · PERSONAL GROWTH ARCHIVE</div>
+      <div class="tags">
+        <span class="tag">科创黑客松参赛达人</span>
+        <span class="tag">PCB 初级工程师（中国电子学会）</span>
+        <span class="tag">智能制造工程本科</span>
+        <span class="tag">大厂校园大使（储备）</span>
+        <span class="tag">目标：工厂 FDE 工程师</span>
+      </div>
+      <div class="meta">齐鲁理工学院 · 智能制造工程 2025 级 ｜ 济南（求学）· 广州（常驻）｜ 2006.10</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button onclick="window.print()">🖨 打印 / 导出 PDF</button>
+    <a href="resume.html">📄 打开配套简历（投实习用）</a>
+    <a href="personal-site/index.html">🏠 打开个人网站</a>
+  </div>
+
+  <!-- ===== 01 基础信息 ===== -->
+  <section id="s1">
+    <h2><span class="no">01</span>基础核心信息</h2>
+    <div class="card">
+      <div class="info-grid">
+        <div class="kv"><b>姓名 / 性别</b><span>印贤聪 · 男</span></div>
+        <div class="kv"><b>出生年月</b><span>2006.10</span></div>
+        <div class="kv"><b>院校</b><span>齐鲁理工学院</span></div>
+        <div class="kv"><b>专业 / 学历</b><span>智能制造工程 · 本科</span></div>
+        <div class="kv"><b>就读时间</b><span>2025.09 — 2029.09</span></div>
+        <div class="kv"><b>政治面貌</b><span>团员</span></div>
+        <div class="kv"><b>联系电话</b><span>18620990303</span></div>
+        <div class="kv"><b>电子邮箱</b><span>195311697@qq.com</span></div>
+        <div class="kv"><b>城市</b><span>济南（求学）· 广州（常驻）</span></div>
+        <div class="kv"><b>GitHub</b><span>github.com/ccccongggg</span></div>
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:var(--sub);">主修课程 / 绩点排名：【占位 · 到教务系统查询后填写】</p>
+    </div>
+  </section>
+
+  <!-- ===== 02 能力总览 ===== -->
+  <section id="s2">
+    <h2><span class="no">02</span>能力总览（自评雷达）</h2>
+    <p class="sec-desc">熟练度 1–5 自评，依据为下方项目实证；技能熟练度可在后台随时修正。</p>
+    <div class="card radar-flex">
+      <svg width="320" height="320" viewBox="0 0 320 320" role="img" aria-label="能力雷达图">
+        <g stroke="#E8DFD2" fill="none">
+          <polygon points="160,55 259.9,127.6 221.7,244.9 98.3,244.9 60.1,127.6"/>
+          <polygon points="160,76 239.9,134.1 209.4,227.9 110.6,227.9 80.1,134.1"/>
+          <polygon points="160,97 219.9,140.5 197,210.9 123,210.9 100.1,140.5"/>
+          <polygon points="160,118 199.9,147 184.7,193.9 135.3,193.9 120.1,147"/>
+          <polygon points="160,139 179.9,153.5 172.3,176.9 147.7,176.9 140.1,153.5"/>
+          <line x1="160" y1="160" x2="160" y2="55"/><line x1="160" y1="160" x2="259.9" y2="127.6"/>
+          <line x1="160" y1="160" x2="221.7" y2="244.9"/><line x1="160" y1="160" x2="98.3" y2="244.9"/>
+          <line x1="160" y1="160" x2="60.1" y2="127.6"/>
+        </g>
+        <polygon points="160,86.5 239.9,134.1 209.4,227.9 123,211 90.1,137.3"
+                 fill="rgba(224,112,32,0.18)" stroke="#E07020" stroke-width="2.5" stroke-linejoin="round"/>
+        <g fill="#E07020">
+          <circle cx="160" cy="86.5" r="4"/><circle cx="239.9" cy="134.1" r="4"/>
+          <circle cx="209.4" cy="227.9" r="4"/><circle cx="123" cy="211" r="4"/>
+          <circle cx="90.1" cy="137.3" r="4"/>
+        </g>
+        <g font-size="12.5" fill="#2A2018" font-weight="600">
+          <text x="160" y="40" text-anchor="middle">嵌入式开发</text>
+          <text x="268" y="122" text-anchor="start">PCB 硬件</text>
+          <text x="228" y="262" text-anchor="start">三维设计</text>
+          <text x="92" y="262" text-anchor="end">视觉 / AI</text>
+          <text x="52" y="122" text-anchor="end">协作表达</text>
+        </g>
+        <g font-size="10" fill="#A34A10">
+          <text x="160" y="92" text-anchor="middle">3.5</text>
+          <text x="243" y="128" text-anchor="start">4.0</text>
+          <text x="213" y="236" text-anchor="start">4.0</text>
+          <text x="127" y="205" text-anchor="start">3.0</text>
+          <text x="86" y="131" text-anchor="end">3.5</text>
+        </g>
+      </svg>
+      <div class="radar-legend">
+        <div class="legend-row"><span>PCB 硬件设计（认证 + 多块实战板）</span><b>4.0</b></div>
+        <div class="legend-row"><span>机械三维成图（省赛双奖 + 国赛参赛）</span><b>4.0</b></div>
+        <div class="legend-row"><span>嵌入式开发（C / 单片机 / UI）</span><b>3.5</b></div>
+        <div class="legend-row"><span>协作表达（辩论最佳辩手 / 学生会）</span><b>3.5</b></div>
+        <div class="legend-row"><span>视觉与 AI 应用（MaixCAM / AI 轻量化）</span><b>3.0</b></div>
+        <p class="legend-note">评分依据全部来自下方项目实证，拒绝空泛自评。短攻方向：机械臂强化学习、数字孪生。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 03 成长时间线 ===== -->
+  <section id="s3">
+    <h2><span class="no">03</span>成长时间线</h2>
+    <div class="card">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-when">2026.08</div>
+          <div class="tl-title">SheNicest 裂变 · 千人黑客松<span class="badge">核心开发 & 项目负责人</span></div>
+          <div class="tl-desc">2 人团队打造实体语音控制终端（详见 04 项目档案 P1）。</div>
+          <div class="tl-tags"><span>黑客松</span><span>AI 硬件</span><span>3D 打印</span><span>嵌入式</span></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-when">2026.07</div>
+          <div class="tl-title">全国大学生电子设计竞赛<span class="badge">队长 / 硬件负责人</span></div>
+          <div class="tl-desc">模块化母版 PCB + MaixCAM 视觉小球平衡系统（详见 P2）。</div>
+          <div class="tl-tags"><span>PCB</span><span>机器视觉</span></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-when">2026.07</div>
+          <div class="tl-title">全国大学生智能汽车竞赛<span class="badge">队长 / 硬件负责人</span></div>
+          <div class="tl-desc">70×50mm 一体化核心板 + 负压吸附循迹（详见 P3）。</div>
+          <div class="tl-tags"><span>PCB</span><span>电路设计</span></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-when">2026.06</div>
+          <div class="tl-title">全国大学生先进成图大赛<span class="badge">团队核心成员</span></div>
+          <div class="tl-desc">主赛项 + 轻量化设计分赛项；AI 轻量化、运动 / 受力分析、拓扑优化。</div>
+          <div class="tl-tags"><span>三维设计</span><span>AI 应用</span></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-when">2026.05</div>
+          <div class="tl-title">第二十三届山东省机电产品创新设计大赛<span class="badge">三维设计负责人 · 省二等奖</span></div>
+          <div class="tl-desc">三维建模并搭建实物（详见 P4）。</div>
+          <div class="tl-tags"><span>三维设计</span><span>机械</span></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-when">2025.09 — 至今</div>
+          <div class="tl-title">入学齐鲁理工学院 · 智能制造工程<span class="badge">进行中</span></div>
+          <div class="tl-desc">获省成图大赛双奖、校级辩论赛最佳辩手、军训训练标兵；任学生会办公室部干事（会议 / 物资 / 文书 / 活动支持）；获中国电子学会 PCB 初级工程师认证、C 语言计算机二级。</div>
+          <div class="tl-tags"><span>本科在读</span><span>学生会</span><span>最佳辩手</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 04 项目档案 ===== -->
+  <section id="s4">
+    <h2><span class="no">04</span>赛事项目全记录</h2>
+    <p class="sec-desc">每个项目 = 背景初衷 + 个人职责 + 成果收获 + 仓库 + 视频位。</p>
+
+    <div class="proj">
+      <div class="art-box"><svg viewBox="0 0 120 120" fill="none" stroke="#F5A455" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="46" width="72" height="48" rx="9"/><rect x="33" y="55" width="54" height="24" rx="4" stroke="#FBDBAF" stroke-opacity="0.55" stroke-width="2"/><path d="M42 66h18" stroke="#FBDBAF" stroke-opacity="0.55" stroke-width="2"/><circle cx="76" cy="66" r="3" fill="#F5A455" stroke="none"/><path d="M60 46V34"/><circle cx="60" cy="29" r="3.5"/><path d="M74 22c6 5 6 11 0 16" stroke="#FBDBAF" stroke-opacity="0.55" stroke-width="2"/><path d="M83 15c10 9 10 21 0 30" stroke="#FBDBAF" stroke-opacity="0.35" stroke-width="2"/></svg></div>
+      <div class="proj-body">
+        <div class="proj-head"><b>P1 · 实体语音控制终端</b><span>SheNicest 千人黑客松 · 2026.08 · 2 人团队</span></div>
+        <p><b>背景初衷</b>：市面 AI 语音助手 / 桌宠多为"闲聊为主、控制为辅"，依赖固定指令与云端，稳定性与隐私不足。本项目反其道：以 Mac 电脑自动化控制为核心、AI 对话为辅助，架构上首创<b>"控制指令优先调度"</b>，业务全自研、仅用乐鑫官方驱动，双供电 + WiFi/USB 双链路冗余，支持全链路本地化离线部署——低延迟、高可靠、可离线。</p>
+        <p><b>个人核心职责</b>：① 外观三维设计（多方案设计 + 3D 打印实体化）② 嵌入式开发（开机界面与互动 UI）③ 二维云台二次开发（人脸跟踪 / 人脸识别）④ 可视化网站独立开发。</p>
+        <p><b>成果与收获</b>：完整跑通黑客松 AI 硬件开发全流程；建立"AI 生成三维 → 3D 打印落地"的完整认知；项目获奖结果：【占位 · 待公布后回填】。</p>
+        <p class="none">仓库：待整理上传 ｜ 视频位：见 09 素材库</p>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="art-box"><svg viewBox="0 0 120 120" fill="none" stroke="#F5A455" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="36" y1="22" x2="36" y2="98"/><line x1="84" y1="22" x2="84" y2="98"/><circle cx="60" cy="52" r="11"/><circle cx="60" cy="52" r="3" fill="#F5A455" stroke="none"/><path d="M60 84v14" stroke="#FBDBAF" stroke-opacity="0.55" stroke-width="2"/><path d="M52 90l8 9 8-9" stroke="#FBDBAF" stroke-opacity="0.55" stroke-width="2"/><path d="M26 98h68"/></svg></div>
+      <div class="proj-body">
+        <div class="proj-head"><b>P2 · 小球平衡控制装置</b><span>全国大学生电子设计竞赛 · 2026.07 · 队长 / 硬件负责人</span></div>
+        <p><b>核心工作</b>：设计模板母版 PCB，各传感器模块以<b>拔插形式</b>连接母版、实现板间通讯；使用 MaixCAM 摄像头与步进电机、齿轮传动机构，实现小球在水管内升降并保持<b>动态平衡</b>；同时完成小车底盘循迹代码。</p>
+        <p><b>锻炼能力</b>：板级系统设计、视觉-执行联调、多模块协同。</p>
+        <p><a href="https://github.com/ccccongggg/national-electronic-design-competition" target="_blank" rel="noopener">→ github.com/ccccongggg/national-electronic-design-competition</a></p>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="art-box"><svg viewBox="0 0 120 120" fill="none" stroke="#F5A455" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 76h18l9-13h26l10 13h17a5 5 0 0 1 5 5v9a5 5 0 0 1-5 5H25a5 5 0 0 1-5-5v-9a5 5 0 0 1 5-5z"/><circle cx="40" cy="93" r="8"/><circle cx="84" cy="93" r="8"/><circle cx="40" cy="93" r="2.5" fill="#F5A455" stroke="none"/><circle cx="84" cy="93" r="2.5" fill="#F5A455" stroke="none"/><path d="M14 107h92" stroke-dasharray="7 7" stroke="#FBDBAF" stroke-opacity="0.5" stroke-width="2"/></svg></div>
+      <div class="proj-body">
+        <div class="proj-head"><b>P3 · 负压循迹智能车</b><span>全国大学生智能汽车竞赛 · 2026.07 · 队长 / 硬件负责人</span></div>
+        <p><b>核心工作</b>：自主设计 <b>70×50mm 一体化 PCB 核心板</b>——运放、MCU 模块、MPU6050、电源、主控全部集成于一板；连接电条驱动负压电机使底盘吸附地板；循迹端采用高精度电感采集模拟信号，经 ADC 转换后实时控制电机，实现稳定循迹。底盘结构亦为自行设计。</p>
+        <p><b>成果与收获</b>：PCB 设计能力大幅提升，从 PCB 小白成长为初级 PCB 工程师（获中国电子学会认证），对底层电路原理理解显著加深。</p>
+        <p><a href="https://github.com/ccccongggg/national-smart-car-competition" target="_blank" rel="noopener">→ github.com/ccccongggg/national-smart-car-competition</a></p>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="art-box"><svg viewBox="0 0 120 120" fill="none" stroke="#F5A455" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M60 18 94 38v44L60 102 26 82V38z"/><path d="M26 38l34 20 34-20M60 58v44" stroke="#FBDBAF" stroke-opacity="0.55" stroke-width="2"/><circle cx="60" cy="18" r="3" fill="#F5A455" stroke="none"/><circle cx="94" cy="38" r="3" fill="#F5A455" stroke="none"/><circle cx="26" cy="38" r="3" fill="#F5A455" stroke="none"/><circle cx="60" cy="102" r="3" fill="#F5A455" stroke="none"/></svg></div>
+      <div class="proj-body">
+        <div class="proj-head"><b>P4 · 机电创新 · 三维设计与实物</b><span>第二十三届山东省机电产品创新设计大赛 · 2026.05 · 三维设计负责人</span></div>
+        <p><b>核心工作</b>：负责团队三维模型设计并搭建实物，获<b>省级二等奖</b>。由此建立对嵌入式开发、机械三维设计与完整开发流程的整体认识。</p>
+        <p><a href="https://github.com/ccccongggg/national-electromechanical-product-design-competition" target="_blank" rel="noopener">→ github.com/ccccongggg/national-electromechanical-product-design-competition</a></p>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="art-box"><svg viewBox="0 0 120 120" fill="none" stroke="#F5A455" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="60" cy="24" r="5.5"/><path d="M57 29 42 92"/><path d="M63 29 78 92"/><path d="M42 92h9M69 92h9" stroke="#FBDBAF" stroke-opacity="0.55" stroke-width="2"/><path d="M32 78q28 16 56 0" stroke="#FBDBAF" stroke-opacity="0.45" stroke-width="2"/><path d="M48 16h24" stroke="#FBDBAF" stroke-opacity="0.55" stroke-width="2"/></svg></div>
+      <div class="proj-body">
+        <div class="proj-head"><b>P5 · 先进成图 · 主赛项 + 轻量化设计</b><span>全国大学生先进成图大赛 · 2026.06 · 团队核心成员</span></div>
+        <p><b>核心工作</b>：参加团队主赛项与轻量化设计分赛项。对三维图纸观察、空间理解与设计技巧大幅提升；接触 <b>AI 轻量化设计、运动分析、受力分析与拓扑优化</b>。</p>
+        <p><a href="https://github.com/ccccongggg/national-advanced-drawing-competition" target="_blank" rel="noopener">→ github.com/ccccongggg/national-advanced-drawing-competition</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 05 荣誉与证书 ===== -->
+  <section id="s5">
+    <h2><span class="no">05</span>荣誉与证书墙</h2>
+    <div class="certs">
+      <div class="cert"><div class="medal">🏅</div><div><span class="yr">2026</span><b>机电产品创新设计大赛 · 省二等奖</b><i>第二十三届山东省大学生机电产品创新设计大赛</i></div></div>
+      <div class="cert"><div class="medal">🏅</div><div><span class="yr">2026</span><b>成图大赛 · 轻量化设计与 AI 应用 二等奖</b><i>第十八届山东省大学生成图大赛</i></div></div>
+      <div class="cert"><div class="medal">🏅</div><div><span class="yr">2026</span><b>成图大赛 · 机械成图技术 团体三等奖</b><i>第十八届山东省大学生成图大赛</i></div></div>
+      <div class="cert"><div class="medal">🛠</div><div><span class="yr">2025</span><b>PCB 初级工程师 认证</b><i>中国电子学会</i></div></div>
+      <div class="cert"><div class="medal">💬</div><div><span class="yr">2026</span><b>校级辩论赛 · 最佳辩手</b><i>齐鲁理工学院</i></div></div>
+      <div class="cert"><div class="medal">📜</div><div><span class="yr">2025</span><b>研学旅游指导（策划与管理）培训证书</b><i>人社能建中心</i></div></div>
+      <div class="cert"><div class="medal">💻</div><div><span class="yr">—</span><b>计算机二级（C 语言）</b><i>教育部考试中心</i></div></div>
+      <div class="cert"><div class="medal">🎖</div><div><span class="yr">2025</span><b>新生军训 · 训练标兵</b><i>齐鲁理工学院</i></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 06 校园任职 ===== -->
+  <section id="s6">
+    <h2><span class="no">06</span>校园官方任职</h2>
+    <div class="card">
+      <h3>学生会办公室部 · 干事（2025.10 — 2026.10）</h3>
+      <p style="font-size:14px;">会议管理（例会签到、记录、文件归档、工作台账）· 物资管理（登记、借用、盘点）· 文书整理（通知 / 简报 / 总结）· 活动协助（后勤对接与流程支持）。</p>
+      <p style="font-size:13.5px;color:var(--sub);margin-top:8px;">收获：规范化行政工作能力、细致严谨的工作思维、文书与物资管理技能、沟通对接与团队协作。</p>
+      <p style="font-size:13px;color:var(--sub);margin-top:8px;">大厂校园大使经历：【占位 · 档案中标注"储备"，落地后补充品牌 / 活动 / 数据】</p>
+    </div>
+  </section>
+
+  <!-- ===== 07 工厂场景知识库 ===== -->
+  <section id="s7">
+    <h2><span class="no">07</span>工厂场景专用知识库 v0.1</h2>
+    <p class="sec-desc">定位：工业智能体素材库 + FDE 职业路线图。写作原则：所有能力绑定具体项目、所有知识点附落地场景、拒绝空泛描述。</p>
+
+    <div class="card">
+      <h3>7.1 工厂认知地图（当前水平 · 诚实版）</h3>
+      <table>
+        <tr><th>工厂技术栈层级</th><th>我了解的内容</th><th>掌握程度</th><th>证据 / 来源</th></tr>
+        <tr><td>设备层（传感器 / 执行器 / 电机驱动）</td><td>电感模拟信号采集、ADC、步进电机与齿轮传动、舵机、直流电机驱动</td><td class="lv full">✅ 亲手做过</td><td>智能车电感 ADC 循迹；电子设计 MaixCAM + 步进电机；黑客松云台</td></tr>
+        <tr><td>控制层（MCU / PLC）</td><td>MCU 裸机开发有实战（C 语言）；PLC 未接触</td><td class="lv half">🔶 一半</td><td>循迹代码、开机 UI、控制调度自研；PLC → 学习计划</td></tr>
+        <tr><td>边缘 / 网络层（总线 / OPC UA / MQTT）</td><td>消费级网络冗余经验（WiFi/USB 双链路）；工业协议未接触</td><td class="lv none">❌ 未接触</td><td>语音终端双链路设计</td></tr>
+        <tr><td>管理层（MES / ERP）</td><td>仅概念级了解</td><td class="lv none">❌ 仅概念</td><td>—</td></tr>
+        <tr><td>分析 / 智能层（数字孪生 / 工业智能体）</td><td>方向明确正在主攻；可视化网站是"数据→界面"雏形；三维建模可承接数字孪生模型侧</td><td class="lv half">🔶 起步</td><td>可视化网站；成图大赛 AI 分析与拓扑优化</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h3>7.2 项目能力 → 工厂场景迁移表</h3>
+      <table>
+        <tr><th>我的项目</th><th>对应工厂场景</th><th>已验证能力</th><th>距离落地还差</th></tr>
+        <tr><td>负压循迹智能车</td><td>AGV / 巡检机器人底层逻辑</td><td>闭环传感-控制全链路</td><td>工况鲁棒性、安全规范</td></tr>
+        <tr><td>小球平衡装置</td><td>视觉引导定位 / 分拣</td><td>视觉-执行联调</td><td>工业相机选型、节拍约束</td></tr>
+        <tr><td>模块化母版 PCB</td><td>设备控制板卡设计</td><td>板级设计（有认证）</td><td>DFM、工业级可靠性</td></tr>
+        <tr><td>语音控制终端</td><td>现场人机交互终端</td><td>离线优先架构、冗余设计</td><td>与 MES / 上层系统对接</td></tr>
+        <tr><td>三维设计 + 3D 打印</td><td>工装夹具 / 小批量件</td><td>图纸到实物快速落地</td><td>公差精度、材料工艺</td></tr>
+        <tr><td>学生会行政</td><td>体系化文件语境（SOP）</td><td>规范化记录习惯</td><td>制造业文件术语与标准</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h3>7.3 工业智能体落地场景素材卡</h3>
+      <p style="font-size:13.5px;">P0 = 现在就能做 demo；P1 = 需补数据 / 知识；P2 = 长期。</p>
+      <table>
+        <tr><th>场景</th><th>输入 → 输出</th><th>我的匹配点</th><th>缺口</th><th>优先级</th></tr>
+        <tr><td>工艺文档问答（RAG）</td><td>自然语言提问 → 带出处的回答</td><td>本知识库即 RAG 素材组织实战</td><td>真实工艺文件（可先模拟）</td><td class="lv full">P0</td></tr>
+        <tr><td>设备点检助手</td><td>点检表照片 / 口述 → 异常告警 + 工单草稿</td><td>设备层传感器知识</td><td>真实点检表样本</td><td class="lv half">P1</td></tr>
+        <tr><td>质检报告生成</td><td>产品图像 → 结构化质检报告</td><td>MaixCAM 视觉实战</td><td>缺陷样本数据集</td><td class="lv half">P1</td></tr>
+        <tr><td>设备状态数字孪生</td><td>设备数据 → 三维状态可视化 + 预警</td><td>三维建模 + 可视化网站</td><td>设备数据接口、仿真平台</td><td class="lv half">P2</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h3>7.4 知识缺口与学习计划（诚实清单）</h3>
+      <table>
+        <tr><th>缺口</th><th>为什么重要</th><th>计划动作</th><th>目标时间</th></tr>
+        <tr><td>PLC 基础（梯形图）</td><td>控制层事实标准</td><td>公开课入门 + 仿真软件练手</td><td>【占位】</td></tr>
+        <tr><td>工业通讯协议（Modbus → MQTT → OPC UA）</td><td>设备数据上网必经之路</td><td>Modbus 数据采集小 demo</td><td>【占位】</td></tr>
+        <tr><td>MES / ERP 概念体系</td><td>与工厂人对话的共同语言</td><td>读一本入门书 + 术语表进本库</td><td>【占位】</td></tr>
+        <tr><td>机械臂强化学习仿真</td><td>短期主攻方向</td><td>Gazebo / Isaac Sim + Python RL</td><td>【占位】</td></tr>
+        <tr><td>工厂实地认知</td><td>没进过真实工厂，一切场景都是推演</td><td>实习 / 参观 / 调研，回填素材卡</td><td>【占位】</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== 08 个人认知与观点 ===== -->
+  <section id="s8">
+    <h2><span class="no">08</span>个人认知与观点储备（面试问答库）</h2>
+    <p class="sec-desc">适配校园大使面试、黑客松答辩、赛事访谈、评优提问——提前储备，无需临时构思。</p>
+    <div class="view"><b>对科创赛事 / 黑客松的理解</b><p>大学里除学位证外第二重要的东西。不能局限于课本，要发散思维、找到擅长的领域去钻研，要实践、要落地。赛事中与团队协作，找到自己的定位、锻炼团队意识；以赛代练，通过比赛打造能力矩阵——面对问题能提出更全面的看法，有 idea 时也有能力把想法变为现实。</p></div>
+    <div class="view"><b>个人核心优势（区别他人）</b><p>不喜欢局限于单一知识，追求广阔的知识面并把各方面内容整合起来，面对问题时得出更精准合适的答案。善于学习、自学意味着高执行力与资源整合能力——没有资源整合能力，学习的难度会很高。</p></div>
+    <div class="view"><b>遇到问题的解决思路</b><p>根本溯源：从问题本身出发，找到导致问题的最直接原因，通过推演找出最根本的原因，先解决根本性问题，再不断向前解决。</p></div>
+    <div class="view"><b>对校园大使工作的理解</b><p>首先对产品本身足够熟悉、能用简单易懂的语言讲授给别人；其次要有广泛的社群触达；并且保持强自我学习能力，对产品新内容实时更新、持续学习。</p></div>
+    <div class="view"><b>未来规划</b><p>短期：机械臂机器人强化学习 + 数字孪生方向，持续跟进 AI 发展。长期：成为工厂里的 FDE（前向部署）工程师。</p></div>
+  </section>
+
+  <!-- ===== 09 视频与多媒体素材库 ===== -->
+  <section id="s9">
+    <h2><span class="no">09</span>视频与多媒体素材库</h2>
+    <p class="sec-desc">我无法凭空生成视频——这里为每个项目预留了标准视频位。拍摄 / 收集素材后，上传 B 站，把分享→嵌入代码里的 <code>player.bilibili.com/...</code> 地址填进对应占位即可内嵌播放。</p>
+    <div class="video-slot"><div class="play">▶</div><div><b>视频位 1 · 语音控制终端 · 现场演示</b><p>建议镜头：开机 UI → 语音控制 Mac 的全过程 → 云台人脸跟踪。素材：黑客松 demo 录屏。</p></div></div>
+    <div class="video-slot"><div class="play">▶</div><div><b>视频位 2 · 小球平衡装置 · 动态平衡实拍</b><p>建议镜头：MaixCAM 画面 + 小球在管道内升降平衡的侧面视角。</p></div></div>
+    <div class="video-slot"><div class="play">▶</div><div><b>视频位 3 · 负压循迹智能车 · 跑道实拍</b><p>建议镜头：整车跑圈俯拍 + 核心板特写。</p></div></div>
+    <div class="video-slot"><div class="play">▶</div><div><b>视频位 4 · 三维设计 · 建模过程延时 / 成品展示</b><p>建议镜头：SolidWorks 建模延时摄影 + 3D 打印过程 + 实物成品。</p></div></div>
+    <div class="howto" style="margin-top:18px;">
+      <b>视频位嵌入方法（三步）：</b>
+      <ol style="margin-top:8px;">
+        <li>视频上传 B 站（或 YouTube）并通过审核；</li>
+        <li>B 站视频页 → 分享 → 复制嵌入代码，取其中 <code>player.bilibili.com/player.html?bvid=…</code> 地址；</li>
+        <li>把本文件里对应 <code>&lt;div class="video-slot"&gt;</code> 占位块替换为 <code>&lt;iframe src="该地址" width="100%" height="360" allowfullscreen&gt;&lt;/iframe&gt;</code>（或直接发给我帮你替换）。</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 10 使用说明 ===== -->
+  <section id="s10">
+    <h2><span class="no">10</span>本档案的使用与维护</h2>
+    <div class="howto">
+      <ol>
+        <li><b>导出 PDF 存档</b>：浏览器打开本文件 → 点顶部「打印 / 导出 PDF」→ 另存为 PDF。</li>
+        <li><b>导入飞书</b>：飞书新建文档 → 直接粘贴内容，或用「导入 → Word/Markdown」；标题层级会自动保留。</li>
+        <li><b>更新内容</b>：所有【占位】标记 = 待你补充的实证（绩点、获奖结果、实习、照片、视频）。改完建议顺手更新封面右下角日期。</li>
+        <li><b>与个人网站联动</b>：本档案与 personal-site 共用同一套真实信息；网站内容的日常修改走 admin.html 后台。</li>
+        <li><b>配套简历</b>：同目录 resume.html，打开后「打印 / 导出 PDF」即为投递版简历。</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 印贤聪 · 个人成长档案知识库 v1.0</span>
+    <span>所有能力绑定具体项目 · 所有知识点附落地场景 · 拒绝空泛描述</span>
+  </footer>
+</div>
+</body>
+</html>
