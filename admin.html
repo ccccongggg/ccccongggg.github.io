@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>网站后台管理 · Cyber Ronin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.4 13.8 4.7v6.6L8 14.6 2.2 11.3V4.7z' fill='none' stroke='%23FBDBAF' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='8' r='1.5' fill='%23E07020'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #FBDBAF;
+    --muted: rgba(251, 219, 175, 0.82);
+    --label: rgba(251, 219, 175, 0.6);
+    --orange: #E07020;
+    --card: rgba(10, 8, 7, 0.58);
+    --line: rgba(251, 219, 175, 0.12);
+    --line-soft: rgba(251, 219, 175, 0.08);
+  }
+
+  html, body { color: var(--cream); overflow-x: hidden; }
+  html { background: #8F3D0B; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    background: linear-gradient(180deg, #C45A18 0%, #B55112 55%, #9A430D 100%);
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(251, 219, 175, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(251, 219, 175, 0.03) 1px, transparent 1px),
+      radial-gradient(110vmax 80vmax at 108% -12%, rgba(255, 164, 74, 0.12), transparent 55%);
+    background-size: auto, 56px 56px, 56px 56px, auto;
+  }
+
+  button { font-family: inherit; cursor: pointer; }
+  input, select, textarea { font-family: inherit; }
+  ::selection { background: var(--orange); color: #FFF6E8; }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 20px; }
+
+  /* ===== 登录页 ===== */
+  .login { min-height: 100vh; display: grid; place-items: center; padding: 40px 20px; }
+  .login-box { width: min(860px, 100%); }
+  .login-head { text-align: center; margin-bottom: 28px; }
+  .login-head .logo { display: inline-flex; align-items: center; gap: 10px; color: var(--cream); text-decoration: none; }
+  .login-head .logo svg { color: var(--orange); }
+  .login-head h1 { font-size: 20px; font-weight: 600; letter-spacing: 0.06em; margin-top: 10px; }
+  .login-head p { color: var(--label); font-size: 12.5px; margin-top: 6px; }
+  .login-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .login-grid { grid-template-columns: 1fr; } }
+  .mode-card {
+    background: var(--card);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--line-soft);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  }
+  .mode-card h2 { font-size: 15px; margin-bottom: 6px; }
+  .mode-card .rec { display: inline-block; font-size: 10px; letter-spacing: 0.12em; color: #FFD9A8; background: rgba(224, 112, 32, 0.3); border: 1px solid rgba(224, 112, 32, 0.6); border-radius: 999px; padding: 2px 9px; margin-left: 6px; vertical-align: 2px; }
+  .mode-card > p { color: var(--muted); font-size: 12.5px; margin-bottom: 16px; }
+  .resume-row { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-soft); font-size: 12.5px; color: var(--label); }
+
+  /* ===== 表单元素 ===== */
+  .field { margin-bottom: 14px; }
+  .field > label { display: block; font-size: 12px; letter-spacing: 0.06em; color: var(--label); margin-bottom: 6px; }
+  .field > label .en-hint { color: rgba(251, 219, 175, 0.4); }
+  input[type="text"], input[type="password"], textarea, select {
+    width: 100%;
+    background: rgba(10, 8, 7, 0.45);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--cream);
+    padding: 9px 12px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  input:focus, textarea:focus, select:focus { border-color: rgba(251, 219, 175, 0.45); }
+  textarea { resize: vertical; min-height: 66px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  @media (max-width: 620px) { .pair { grid-template-columns: 1fr; } }
+  .pair input:first-child { border-left: 2px solid rgba(224, 112, 32, 0.55); }
+  .pair input:last-child { border-left: 2px solid rgba(251, 219, 175, 0.3); }
+  .check-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
+  .check-row input { width: auto; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid var(--cream);
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--cream);
+    background: transparent;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+    text-decoration: none;
+  }
+  .btn:hover { transform: translateY(-1px); background: rgba(251, 219, 175, 0.08); }
+  .btn.primary { background: var(--orange); border-color: var(--orange); color: #FFF6E8; }
+  .btn.primary:hover { background: #EF7E2E; }
+  .btn.ghost { border-color: rgba(251, 219, 175, 0.4); }
+  .btn.small { padding: 5px 12px; font-size: 11.5px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ===== 应用框架 ===== */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(10, 8, 7, 0.5);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar-inner { display: flex; align-items: center; gap: 14px; padding: 12px 20px; max-width: 1060px; margin: 0 auto; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 14px; }
+  .brand svg { color: var(--orange); }
+  .mode-badge {
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    border: 1px solid rgba(251, 219, 175, 0.3);
+    border-radius: 999px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 320px;
+  }
+  .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .dirty-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); display: none; }
+  .dirty .dirty-dot { display: inline-block; }
+
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 20px 12px; max-width: 1060px; margin: 0 auto; }
+  .tab-btn {
+    border: 1px solid var(--line);
+    background: rgba(10, 8, 7, 0.35);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    transition: all 0.2s ease;
+  }
+  .tab-btn:hover { color: var(--cream); }
+  .tab-btn.on { background: rgba(224, 112, 32, 0.25); border-color: rgba(224, 112, 32, 0.65); color: #FFD9A8; }
+
+  #editor { padding: 26px 20px 80px; max-width: 1060px; margin: 0 auto; }
+  .panel {
+    background: var(--card);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--line-soft);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+  }
+  .panel > h3 {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    color: var(--cream);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .panel > h3 .idx { color: var(--orange); font-size: 11px; letter-spacing: 0.08em; }
+  .panel > h3 .sub { color: var(--label); font-size: 11px; font-weight: 400; }
+
+  /* 列表编辑器 */
+  .list-item {
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    background: rgba(10, 8, 7, 0.3);
+  }
+  .list-item-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .list-item-head .no { font-size: 11px; color: var(--orange); letter-spacing: 0.08em; font-weight: 600; }
+  .list-item-head .title-preview { font-size: 12.5px; color: var(--label); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .icon-act {
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--muted);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    transition: all 0.15s ease;
+    flex: 0 0 auto;
+  }
+  .icon-act:hover { color: var(--cream); border-color: rgba(251, 219, 175, 0.4); }
+  .icon-act.danger:hover { color: #FFB4A0; border-color: rgba(255, 120, 80, 0.6); background: rgba(255, 100, 60, 0.12); }
+  .add-row { text-align: center; padding: 6px 0 2px; }
+
+  /* 图片字段 */
+  .img-field { display: flex; gap: 14px; align-items: flex-start; }
+  .img-preview {
+    width: 108px; height: 108px;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    border: 1px dashed rgba(251, 219, 175, 0.35);
+    background: rgba(10, 8, 7, 0.35) center / cover no-repeat;
+    display: grid;
+    place-items: center;
+    color: var(--label);
+    font-size: 10.5px;
+    text-align: center;
+    padding: 6px;
+  }
+  .img-ops { flex: 1; min-width: 0; }
+  .img-ops .row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+
+  /* toast */
+  #toast {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(10, 8, 7, 0.85);
+    border: 1px solid rgba(251, 219, 175, 0.3);
+    color: var(--cream);
+    padding: 11px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 99;
+    max-width: 90vw;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #toast.err { border-color: rgba(255, 120, 80, 0.6); color: #FFC9B8; }
+
+  .tip {
+    font-size: 12px;
+    color: var(--label);
+    background: rgba(251, 219, 175, 0.05);
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+  .savebar-note { font-size: 11.5px; color: var(--label); }
+
+  .login-error { color: #FFC9B8; font-size: 12.5px; margin-top: 10px; min-height: 18px; }
+  .hidden { display: none !important; }
+
+  /* 修改账号密码对话框 */
+  .dialog-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: rgba(20, 10, 4, 0.6);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    display: grid;
+    place-items: center;
+    padding: 20px;
+  }
+  .dialog-card {
+    width: min(460px, 100%);
+    background: rgba(24, 14, 8, 0.97);
+    border: 1px solid rgba(251, 219, 175, 0.2);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+  }
+  .dialog-card h3 { font-size: 15px; margin-bottom: 14px; }
+  .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+  .loading-mask {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(20, 10, 4, 0.6);
+    display: grid; place-items: center;
+    color: var(--cream); font-size: 13px;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 账号密码登录门 ============ -->
+<div class="login" id="gate-view">
+  <div class="login-box" style="max-width:420px;">
+    <div class="login-head">
+      <span class="logo">
+        <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <path d="M8 1.4L13.8 4.7V11.3L8 14.6L2.2 11.3V4.7L8 1.4Z"/>
+          <circle cx="8" cy="8" r="1.35" fill="currentColor" stroke="none"/>
+        </svg>
+        CYBER RONIN
+      </span>
+      <h1>网站后台管理</h1>
+      <p>请使用账号密码登录 · 仅限站长本人</p>
+    </div>
+    <div class="mode-card">
+      <div class="field"><label>账号</label><input type="text" id="gate-user" autocomplete="username" placeholder="账号"></div>
+      <div class="field"><label>密码</label><input type="password" id="gate-pass" autocomplete="current-password" placeholder="密码"></div>
+      <button class="btn primary" id="gate-btn" type="button" style="width:100%;justify-content:center;">登 录</button>
+      <div class="login-error" id="gate-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 模式选择视图 ============ -->
+<div class="login hidden" id="login-view">
+  <div class="login-box">
+    <div class="login-head">
+      <span class="logo">
+        <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <path d="M8 1.4L13.8 4.7V11.3L8 14.6L2.2 11.3V4.7L8 1.4Z"/>
+          <circle cx="8" cy="8" r="1.35" fill="currentColor" stroke="none"/>
+        </svg>
+        CYBER RONIN
+      </span>
+      <h1>网站后台管理</h1>
+      <p>在这里修改网站的一切内容，无需碰代码</p>
+    </div>
+
+    <div class="login-grid">
+      <div class="mode-card">
+        <h2>连接 GitHub <span class="rec">推荐 · 线上自动更新</span></h2>
+        <p>用 GitHub Token 登录。保存时自动提交到你的仓库，线上网站约 1 分钟后自动更新。Token 只保存在你自己的浏览器里。</p>
+        <div class="field"><label>GitHub 用户名 / 组织名</label><input type="text" id="gh-owner" placeholder="例如 yourname"></div>
+        <div class="field"><label>仓库名</label><input type="text" id="gh-repo" placeholder="例如 yourname.github.io"></div>
+        <div class="field"><label>分支（一般填 main）</label><input type="text" id="gh-branch" value="main"></div>
+        <div class="field"><label>Personal Access Token（Contents 读写权限）</label><input type="password" id="gh-token" placeholder="github_pat_… / ghp_…"></div>
+        <button class="btn primary" id="gh-login-btn" type="button">测试连接并登录</button>
+        <div class="login-error" id="gh-error"></div>
+        <div class="resume-row">还没有 Token？按 DEPLOY.md《后台管理指南》创建，约 2 分钟。</div>
+      </div>
+
+      <div class="mode-card">
+        <h2>本地模式</h2>
+        <p>不登录、不连网也能用：编辑后保存回本机的 content.js 文件（适合网站还在本地、或暂时不想配置 Token）。以后随时可切换到 GitHub 模式。</p>
+        <button class="btn" id="local-login-btn" type="button">以本地模式进入后台</button>
+        <div class="resume-row" id="local-resume" style="display:none;">
+          <button class="btn small ghost" id="resume-btn" type="button">继续上次未导出的编辑</button>
+        </div>
+        <div class="login-error" id="local-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 应用视图 ============ -->
+<div id="app-view" class="hidden">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="brand">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <path d="M8 1.4L13.8 4.7V11.3L8 14.6L2.2 11.3V4.7L8 1.4Z"/>
+          <circle cx="8" cy="8" r="1.35" fill="currentColor" stroke="none"/>
+        </svg>
+        网站后台
+      </span>
+      <span class="mode-badge" id="mode-badge"></span>
+      <div class="topbar-actions">
+        <span class="savebar-note" id="save-note"></span>
+        <span class="dirty-dot" title="有未保存的修改"></span>
+        <button class="btn small ghost hidden" id="import-btn" type="button">导入 content.js</button>
+        <a class="btn small ghost" id="open-site" href="index.html" target="_blank">打开网站</a>
+        <button class="btn small ghost" id="cred-btn" type="button">修改密码</button>
+        <button class="btn small ghost" id="logout-btn" type="button">退出登录</button>
+        <button class="btn small primary" id="save-btn" type="button"><span class="dirty-dot"></span>保存更改</button>
+      </div>
+    </div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+  <div id="editor"></div>
+</div>
+
+<div id="toast"></div>
+
+<!-- 修改账号密码对话框 -->
+<div class="dialog-mask hidden" id="cred-dialog">
+  <div class="dialog-card">
+    <h3>修改后台账号密码</h3>
+    <div class="field"><label>当前密码</label><input type="password" id="cred-cur" autocomplete="current-password"></div>
+    <div class="field"><label>新账号</label><input type="text" id="cred-new-user" autocomplete="username"></div>
+    <div class="field"><label>新密码（至少 4 位）</label><input type="password" id="cred-new-pass" autocomplete="new-password"></div>
+    <div class="field"><label>确认新密码</label><input type="password" id="cred-new-pass2" autocomplete="new-password"></div>
+    <div class="login-error" id="cred-error"></div>
+    <div class="savebar-note" id="cred-note">修改后本机立即生效；连接 GitHub 时会自动同步线上，所有设备使用新凭据。</div>
+    <div class="dialog-actions">
+      <button class="btn small ghost" id="cred-cancel" type="button">取消</button>
+      <button class="btn small primary" id="cred-save" type="button">保存修改</button>
+    </div>
+  </div>
+</div>
+
+<div id="loading-mask" class="loading-mask hidden">处理中…</div>
+
+<input type="file" id="content-file-input" accept=".js,text/javascript" class="hidden">
+<input type="file" id="img-file-input" accept="image/*" class="hidden">
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================================================================
+     状态
+     ================================================================ */
+  var LS_CFG = 'ps-admin-cfg';      // 登录配置（含 token）
+  var LS_DRAFT = 'ps-admin-draft';  // 未导出的编辑草稿
+  var LS_AUTH = 'ps-admin-auth';    // 后台账号密码（本机覆盖，SHA-256）
+  var SESSION = 'ps-admin-session'; // 登录会话（关浏览器即失效）
+  var CONTENT_FILE = 'content.js';
+  var AUTH_FILE = 'admin-auth.json';
+
+  /* 初始账号：yinxc / yc123456 —— 登录后请立即在右上角「修改密码」更换 */
+  var DEFAULT_AUTH = {
+    user: '608af0166a41a19c47f0b33db55ec3d1402cec20b6779843f56a490d16984022',
+    pass: '6552b84866796cee8b8769f22dd3a91fd1b31a090ca24c477706849e7cf1d938'
+  };
+  var authData = null;
+
+  var cfg = null;   // { mode: 'github'|'local', owner, repo, branch, token }
+  var S = null;     // 内容工作副本 { data, ui }
+  var tab = 'hero';
+  var dirty = false;
+  var imgCtx = null; // 待上传图片的字段路径
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function toast(msg, isErr) {
+    var t = $('#toast');
+    t.textContent = msg;
+    t.className = isErr ? 'err show' : 'show';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.className = ''; }, 3200);
+  }
+  function getP(obj, path) {
+    return path.split('.').reduce(function (o, k) { return o == null ? o : o[k]; }, obj);
+  }
+  function setP(obj, path, val) {
+    var ks = path.split('.'), last = ks.pop();
+    var o = ks.reduce(function (o, k) { return o[k]; }, obj);
+    o[last] = val;
+  }
+
+  function loadJSON(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function saveJSON(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  function markDirty() {
+    if (!dirty) { dirty = true; $('#save-btn').classList.add('dirty'); $('#save-note').textContent = '有未保存的修改'; }
+    if (cfg && cfg.mode === 'local') saveJSON(LS_DRAFT, S); // 本地模式自动暂存，防丢
+  }
+  function clearDirty() {
+    dirty = false;
+    $('#save-btn').classList.remove('dirty');
+    $('#save-note').textContent = '';
+  }
+
+  /* ================================================================
+     空白内容模板（本地模式从零开始时使用）
+     ================================================================ */
+  function blankContent() {
+    var pair = function (zh, en) { return { zh: zh || '', en: en || '' }; };
+    return {
+      data: {
+        name: pair('你的名字', 'YOUR NAME'),
+        roleTag: pair('个人主页', 'Portfolio'),
+        heroLines: { zh: ['你的名字 //', '', ''], en: ['YOUR NAME //', '', ''] },
+        tagline: pair('', ''),
+        status: pair('寻找组队中 · OPEN TO TEAM UP', 'OPEN TO TEAM UP'),
+        heroImages: { base: '', reveal: '' },
+        contact: { email: '', github: '', bilibili: '', zhihu: '', wechatId: '', resume: 'assets/resume.pdf' },
+        featured: { title: pair('', ''), desc: pair('', ''), link: '#portfolio', thumb: '' },
+        heroSpecs: [],
+        about: { photo: '', oneLiner: pair('', ''), bio: [], chips: [] },
+        timeline: [], skills: [], projects: [], certs: [], quotes: [], posts: []
+      },
+      ui: null
+    };
+  }
+
+  /* 读取已有内容时的兼容处理（字符串 value 转 pair 等） */
+  function normalize(C) {
+    C.data = C.data || {};
+    C.data.heroSpecs = C.data.heroSpecs || [];
+    C.data.heroSpecs.forEach(function (r) {
+      if (typeof r.value === 'string') r.value = { zh: r.value, en: r.value };
+    });
+    ['heroLines', 'tagline', 'status', 'name', 'roleTag'].forEach(function (k) {
+      if (C.data[k] && typeof C.data[k] === 'string') C.data[k] = { zh: C.data[k], en: C.data[k] };
+    });
+    if (C.ui == null) C.ui = null; // ui 文案保持后台不可编辑，站点内置默认即可
+    return C;
+  }
+
+  /* ================================================================
+     序列化：S → content.js 文本
+     ================================================================ */
+  function buildContentText() {
+    return '/* ================================================================\n' +
+      '   网站内容数据文件（由 admin.html 后台自动维护）\n' +
+      '   —— 平时不需要手动改这个文件；要改内容请打开 admin.html 后台\n' +
+      '   ================================================================ */\n' +
+      'window.SITE_CONTENT = ' + JSON.stringify(S, null, 2) + ';\n';
+  }
+  function parseContentText(text) {
+    var a = text.indexOf('{');
+    var b = text.lastIndexOf('}');
+    if (a < 0 || b < 0) throw new Error('文件里没有找到内容');
+    return normalize(JSON.parse(text.slice(a, b + 1)));
+  }
+
+  /* ================================================================
+     SHA-256（纯 JS 实现，兼容 file:// 等非安全上下文）
+     ================================================================ */
+  function sha256(ascii) {
+    function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
+    var mathPow = Math.pow, maxWord = mathPow(2, 32), result = '';
+    var words = [], asciiBitLength = ascii.length * 8;
+    var hash = [], k = [], primeCounter = 0, isComposite = {};
+    for (var candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (var i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+      }
+    }
+    ascii += '\x80';
+    while (ascii.length % 64 - 56) ascii += '\x00';
+    for (i = 0; i < ascii.length; i++) {
+      var j = ascii.charCodeAt(i);
+      if (j >> 8) return '';
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words.length] = ((asciiBitLength / maxWord) | 0);
+    words[words.length] = asciiBitLength;
+    for (j = 0; j < words.length;) {
+      var w = words.slice(j, j += 16), oldHash = hash.slice(0);
+      for (i = 0; i < 64; i++) {
+        var w15 = w[i - 15], w2 = w[i - 2];
+        var a = hash[0], e = hash[4];
+        var temp1 = hash[7]
+          + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+          + ((e & hash[5]) ^ ((~e) & hash[6]))
+          + k[i]
+          + (w[i] = (i < 16) ? w[i] : (
+              w[i - 16]
+              + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))
+              + w[i - 7]
+              + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
+            ) | 0);
+        var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+          + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+        hash.pop();
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (j = 3; j + 1; j--) {
+        var b = (hash[i] >> (j * 8)) & 255;
+        result += ((b < 16) ? '0' : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+
+  function utf8sha256(str) {
+    var bytes = unescape(encodeURIComponent(String(str)));
+    return sha256(bytes);
+  }
+
+  /* 凭据解析：本机覆盖 > admin-auth.json > 出厂默认 */
+  function resolveAuth() {
+    var saved = loadJSON(LS_AUTH);
+    if (saved && saved.user && saved.pass) { authData = saved; return Promise.resolve(authData); }
+    return fetch(AUTH_FILE, { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('no file'); return r.json(); })
+      .then(function (j) { authData = (j && j.user && j.pass) ? j : DEFAULT_AUTH; return authData; })
+      .catch(function () { authData = DEFAULT_AUTH; return authData; });
+  }
+
+  /* ================================================================
+     GitHub API
+     ================================================================ */
+  function ghHeaders() {
+    return { 'Authorization': 'Bearer ' + cfg.token, 'Accept': 'application/vnd.github+json' };
+  }
+  function ghUrl(path, ref) {
+    return 'https://api.github.com/repos/' + encodeURIComponent(cfg.owner) + '/' +
+      encodeURIComponent(cfg.repo) + '/contents/' + path + (ref ? '?ref=' + encodeURIComponent(ref) : '');
+  }
+  function b64enc(str) { return btoa(unescape(encodeURIComponent(str))); }
+  function b64dec(b64) { return decodeURIComponent(escape(atob(b64.replace(/\n/g, '')))); }
+
+  function apiGet(url) {
+    return fetch(url, { headers: ghHeaders() }).then(function (r) {
+      return r.json().then(function (j) {
+        if (!r.ok) throw new Error(j.message || ('HTTP ' + r.status));
+        return j;
+      });
+    });
+  }
+  function apiPut(url, body) {
+    return fetch(url, {
+      method: 'PUT',
+      headers: Object.assign({ 'Content-Type': 'application/json' }, ghHeaders()),
+      body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().then(function (j) {
+        if (!r.ok) throw new Error(j.message || ('HTTP ' + r.status));
+        return j;
+      });
+    });
+  }
+
+  function ghLoadContent() {
+    return apiGet(ghUrl(CONTENT_FILE, cfg.branch)).then(function (j) {
+      if (j.encoding !== 'base64') throw new Error('文件编码异常');
+      return { text: b64dec(j.content), sha: j.sha };
+    });
+  }
+  function ghSaveContent(text, sha) {
+    return apiPut(ghUrl(CONTENT_FILE), {
+      message: '更新网站内容（通过后台管理）',
+      content: b64enc(text),
+      branch: cfg.branch,
+      sha: sha
+    });
+  }
+  function ghUploadAsset(dataUrl) {
+    var name = 'assets/img-' + Date.now() + '-' + Math.floor(Math.random() * 1e4) + '.jpg';
+    var b64 = dataUrl.split(',')[1];
+    return apiPut(ghUrl(name), {
+      message: '上传图片（通过后台管理）',
+      content: b64,
+      branch: cfg.branch
+    }).then(function () {
+      /* 仓库里的图片会由 GitHub Pages 直接伺服，用相对路径最稳 */
+      return name;
+    });
+  }
+
+  /* ================================================================
+     登录流程（账号密码门 → 模式选择 → 应用）
+     ================================================================ */
+  function enterApp() {
+    $('#gate-view').classList.add('hidden');
+    $('#login-view').classList.add('hidden');
+    $('#app-view').classList.remove('hidden');
+    $('#mode-badge').textContent = cfg.mode === 'github'
+      ? ('已连接 GitHub · ' + cfg.owner + '/' + cfg.repo + ' · ' + cfg.branch)
+      : '本地模式（保存到本机文件）';
+    $('#import-btn').classList.toggle('hidden', cfg.mode !== 'local');
+    $('#open-site').href = 'index.html';
+    buildTabs();
+    renderTab();
+    clearDirty();
+  }
+
+  function showGate() {
+    $('#gate-view').classList.remove('hidden');
+    $('#login-view').classList.add('hidden');
+    $('#app-view').classList.add('hidden');
+    $('#gate-user').value = '';
+    $('#gate-pass').value = '';
+    $('#gate-error').textContent = '';
+  }
+
+  function fillGhFields() {
+    if (cfg && cfg.mode === 'github') {
+      $('#gh-owner').value = cfg.owner || '';
+      $('#gh-repo').value = cfg.repo || '';
+      $('#gh-branch').value = cfg.branch || 'main';
+      $('#gh-token').value = cfg.token || '';
+    }
+    if (loadJSON(LS_DRAFT)) $('#local-resume').style.display = 'block';
+  }
+
+  /* 通过账号密码门之后：有配置直接进应用，否则先选模式 */
+  function afterGate() {
+    $('#gate-view').classList.add('hidden');
+    cfg = loadJSON(LS_CFG);
+    if (!cfg) {
+      fillGhFields();
+      $('#login-view').classList.remove('hidden');
+      return;
+    }
+    showLoading('正在载入内容…');
+    if (cfg.mode === 'github' && cfg.token) {
+      ghLoadContent()
+        .then(function (res) {
+          S = parseContentText(res.text);
+          hideLoading();
+          enterApp();
+        })
+        .catch(function (e) {
+          hideLoading();
+          fillGhFields();
+          $('#login-view').classList.remove('hidden');
+          toast('自动载入失败：' + e.message + '，请重新连接 GitHub', true);
+        });
+    } else {
+      var draft = loadJSON(LS_DRAFT);
+      if (draft) {
+        S = draft;
+        hideLoading();
+        enterApp();
+        toast('已恢复上次的编辑草稿');
+      } else {
+        tryFetchLocalContent().then(function (C) {
+          S = C || blankContent();
+          hideLoading();
+          enterApp();
+          if (!C) toast('本地模式：已从空白内容开始');
+        });
+      }
+    }
+  }
+
+  /* 账号密码门 */
+  function gateLogin() {
+    var u = $('#gate-user').value.trim();
+    var p = $('#gate-pass').value;
+    var err = $('#gate-error');
+    err.textContent = '';
+    if (!u || !p) { err.textContent = '请输入账号和密码。'; return; }
+    var btn = $('#gate-btn');
+    btn.disabled = true;
+    Promise.resolve().then(function () {
+      if (utf8sha256(u) === authData.user && utf8sha256(p) === authData.pass) {
+        sessionStorage.setItem(SESSION, '1');
+        afterGate();
+      } else {
+        err.textContent = '账号或密码错误。';
+      }
+    }).then(function () { btn.disabled = false; });
+  }
+
+  $('#gate-btn').addEventListener('click', gateLogin);
+  $('#gate-pass').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') gateLogin();
+  });
+  $('#gate-user').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') gateLogin();
+  });
+
+  $('#gh-login-btn').addEventListener('click', function () {
+    var owner = $('#gh-owner').value.trim();
+    var repo = $('#gh-repo').value.trim();
+    var branch = $('#gh-branch').value.trim() || 'main';
+    var token = $('#gh-token').value.trim();
+    var err = $('#gh-error');
+    err.textContent = '';
+    if (!owner || !repo || !token) { err.textContent = '请把三行信息都填全。'; return; }
+    cfg = { mode: 'github', owner: owner, repo: repo, branch: branch, token: token };
+    var btn = this;
+    btn.disabled = true; btn.textContent = '连接中…';
+    apiGet('https://api.github.com/repos/' + encodeURIComponent(owner) + '/' + encodeURIComponent(repo))
+      .then(function () { return ghLoadContent(); })
+      .then(function (res) {
+        S = parseContentText(res.text);
+        saveJSON(LS_CFG, cfg);
+        localStorage.removeItem(LS_DRAFT);
+        enterApp();
+        toast('连接成功，已载入线上内容');
+      })
+      .catch(function (e) {
+        err.textContent = '连接失败：' + e.message + '（请检查用户名 / 仓库名 / 分支 / Token，Token 需要 Contents 读写权限）';
+        cfg = null;
+      })
+      .then(function () { btn.disabled = false; btn.textContent = '测试连接并登录'; });
+  });
+
+  $('#local-login-btn').addEventListener('click', function () {
+    cfg = { mode: 'local' };
+    var draft = loadJSON(LS_DRAFT);
+    if (draft) {
+      S = draft;
+      enterApp();
+      toast('已恢复上次的编辑草稿');
+      return;
+    }
+    tryFetchLocalContent().then(function (C) {
+      S = C || blankContent();
+      enterApp();
+      if (!C) toast('本地模式：已从空白内容开始，可随时导入已有 content.js');
+    });
+  });
+
+  function tryFetchLocalContent() {
+    return fetch(CONTENT_FILE, { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw 0; return r.text(); })
+      .then(function (t) { return parseContentText(t); })
+      .catch(function () { return null; });
+  }
+
+  $('#resume-btn').addEventListener('click', function () {
+    var draft = loadJSON(LS_DRAFT);
+    if (!draft) { toast('没有找到草稿', true); return; }
+    cfg = { mode: 'local' };
+    S = draft;
+    enterApp();
+  });
+
+  $('#logout-btn').addEventListener('click', function () {
+    if (dirty && !confirm('有未保存的修改，确定退出？（本地模式的修改已自动暂存）')) return;
+    sessionStorage.removeItem(SESSION);
+    localStorage.removeItem(LS_CFG);
+    location.reload();
+  });
+
+  /* ================================================================
+     保存
+     ================================================================ */
+  $('#save-btn').addEventListener('click', function () {
+    var btn = this;
+    if (cfg.mode === 'github') {
+      btn.disabled = true; btn.textContent = '保存中…';
+      /* 先取最新 sha（可能已在别处被修改），再提交 */
+      ghLoadContent()
+        .then(function (res) { return ghSaveContent(buildContentText(), res.sha); })
+        .then(function () {
+          clearDirty();
+          toast('已保存并提交到 GitHub，线上网站约 1 分钟后自动更新');
+        })
+        .catch(function (e) { toast('保存失败：' + e.message, true); })
+        .then(function () { btn.disabled = false; btn.textContent = '保存更改'; });
+    } else {
+      var text = buildContentText();
+      saveJSON(LS_DRAFT, S);
+      if (window.showSaveFilePicker) {
+        window.showSaveFilePicker({ suggestedName: CONTENT_FILE, types: [{ description: 'JS 文件', accept: { 'text/javascript': ['.js'] } }] })
+          .then(function (picker) { return picker.createWritable(); })
+          .then(function (w) { return w.write(text).then(function () { return w.close(); }); })
+          .then(function () { clearDirty(); toast('已保存到 content.js，刷新网站即可看到更新'); })
+          .catch(function (e) {
+            if (e && e.name === 'AbortError') return;
+            downloadContent(text);
+          });
+      } else {
+        downloadContent(text);
+        clearDirty();
+      }
+    }
+  });
+
+  function downloadFile(name, text, mime) {
+    var blob = new Blob([text], { type: mime || 'text/plain' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  function downloadContent(text) {
+    downloadFile(CONTENT_FILE, text, 'text/javascript');
+    toast('已下载 content.js —— 请用它替换网站目录里的同名文件');
+  }
+
+  window.addEventListener('beforeunload', function (e) {
+    if (dirty) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  /* ================================================================
+     通用控件渲染
+     ================================================================ */
+  function pairField(label, path, val, opts) {
+    opts = opts || {};
+    var zh = val && typeof val === 'object' ? (val.zh || '') : (val || '');
+    var en = val && typeof val === 'object' ? (val.en || '') : '';
+    function ctrl(attrs, ph, v) {
+      return opts.textarea
+        ? '<textarea rows="3" ' + attrs + ' placeholder="' + ph + '">' + esc(v) + '</textarea>'
+        : '<input type="text" ' + attrs + ' placeholder="' + ph + '" value="' + esc(v) + '">';
+    }
+    return (
+      '<div class="field">' +
+        '<label>' + label + ' <span class="en-hint">左：中文 · 右：English</span></label>' +
+        '<div class="pair">' +
+          ctrl('data-path="' + path + '.zh"', '中文', zh) +
+          ctrl('data-path="' + path + '.en"', 'English', en) +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function textField(label, path, val, placeholder) {
+    return (
+      '<div class="field">' +
+        '<label>' + label + '</label>' +
+        '<input type="text" data-path="' + path + '" value="' + esc(val || '') + '" placeholder="' + esc(placeholder || '') + '">' +
+      '</div>'
+    );
+  }
+
+  /* 逗号分隔的标签（中英成对） */
+  function tagsPairField(label, pathPrefix, arr) {
+    var zh = (arr || []).map(function (x) { return x.zh || ''; }).join('，');
+    var en = (arr || []).map(function (x) { return x.en || ''; }).join(', ');
+    return (
+      '<div class="field">' +
+        '<label>' + label + ' <span class="en-hint">用逗号分隔，两条输入框按顺序一一对应</span></label>' +
+        '<div class="pair">' +
+          '<input type="text" data-tags="zh" data-target="' + pathPrefix + '" value="' + esc(zh) + '" placeholder="中文，用逗号分隔">' +
+          '<input type="text" data-tags="en" data-target="' + pathPrefix + '" value="' + esc(en) + '" placeholder="English, comma separated">' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function tagsPlainField(label, path, arr) {
+    return (
+      '<div class="field">' +
+        '<label>' + label + ' <span class="en-hint">用逗号分隔</span></label>' +
+        '<input type="text" data-plain-tags="' + path + '" value="' + esc((arr || []).join('，')) + '" placeholder="例如：STM32，PCB，SolidWorks">' +
+      '</div>'
+    );
+  }
+
+  function imageField(label, path, val, hint) {
+    return (
+      '<div class="field">' +
+        '<label>' + label + '</label>' +
+        '<div class="img-field">' +
+          '<div class="img-preview" id="prev-' + path.replace(/\./g, '-') + '"' + (val ? ' style="background-image:url(\'' + esc(val) + '\')"' : '') + '>' + (val ? '' : '未设置') + '</div>' +
+          '<div class="img-ops">' +
+            '<div class="row">' +
+              '<button class="btn small" type="button" data-act="img-pick" data-target="' + path + '">上传图片</button>' +
+              '<button class="btn small ghost" type="button" data-act="img-clear" data-target="' + path + '">清除</button>' +
+            '</div>' +
+            '<input type="text" data-path="' + path + '" data-imgurl="1" value="' + esc(val || '') + '" placeholder="或直接粘贴图片地址（https://…）">' +
+            '<div class="savebar-note" style="margin-top:6px;">' + (hint || '上传后自动压缩到合适尺寸') + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function listHead(no, listPath, i, len, preview) {
+    return (
+      '<div class="list-item-head">' +
+        '<span class="no">' + no + '</span>' +
+        '<span class="title-preview">' + esc(preview || '') + '</span>' +
+        '<button class="icon-act" type="button" data-act="up" data-list="' + listPath + '" data-i="' + i + '" title="上移" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
+        '<button class="icon-act" type="button" data-act="down" data-list="' + listPath + '" data-i="' + i + '" title="下移" ' + (i === len - 1 ? 'disabled' : '') + '>↓</button>' +
+        '<button class="icon-act danger" type="button" data-act="del" data-list="' + listPath + '" data-i="' + i + '" title="删除">✕</button>' +
+      '</div>'
+    );
+  }
+  function addRow(listPath, label) {
+    return '<div class="add-row"><button class="btn small" type="button" data-act="add" data-list="' + listPath + '">＋ ' + label + '</button></div>';
+  }
+  function previewOf(item) {
+    var c = item && (item.title || item.name || item.text || item.when);
+    var v = c && typeof c === 'object' ? (c.zh || c.en) : c;
+    return v || '（未填写）';
+  }
+
+  /* ================================================================
+     各板块编辑器
+     ================================================================ */
+  var TABS = [
+    ['hero', '首页'], ['about', '关于我'], ['timeline', '经历'], ['skills', '技能'],
+    ['projects', '作品集'], ['honors', '荣誉 / 背书'], ['blog', '博客'], ['contact', '联系方式']
+  ];
+
+  function buildTabs() {
+    $('#tabs').innerHTML = TABS.map(function (t) {
+      return '<button class="tab-btn' + (t[0] === tab ? ' on' : '') + '" type="button" data-tab="' + t[0] + '">' + t[1] + '</button>';
+    }).join('');
+  }
+
+  function renderTab() {
+    var fn = {
+      hero: tabHero, about: tabAbout, timeline: tabTimeline, skills: tabSkills,
+      projects: tabProjects, honors: tabHonors, blog: tabBlog, contact: tabContact
+    }[tab];
+    $('#editor').innerHTML = fn();
+  }
+
+  function tabHero() {
+    var d = S.data;
+    var lines = function (langKey) {
+      var arr = d.heroLines[langKey] || [];
+      var out = '';
+      for (var i = 0; i < 3; i++) {
+        out += '<div class="field"><label>第 ' + (i + 1) + ' 行（' + (langKey === 'zh' ? '中文' : 'English') + '）</label>' +
+          '<input type="text" data-path="data.heroLines.' + langKey + '.' + i + '" value="' + esc(arr[i] || '') + '"></div>';
+      }
+      return out;
+    };
+    return (
+      '<div class="tip">这里是打开网站看到的第一屏：名字、大标题、一句话介绍、状态标签、日/夜两张背景图，以及左下角的代表作卡片。</div>' +
+      '<div class="panel"><h3><span class="idx">// 01</span> 名字与定位</h3>' +
+        pairField('名字 / ID', 'data.name', d.name) +
+        pairField('定位副标题（浏览器标签页标题也会用到）', 'data.roleTag', d.roleTag) +
+        '<div class="field"><label>大标题（三行）<span class="en-hint">建议第一行带 // 结尾更有风格</span></label>' +
+          '<div class="pair"><div>' + lines('zh') + '</div><div>' + lines('en') + '</div></div>' +
+        '</div>' +
+        pairField('一句话介绍', 'data.tagline', d.tagline, { textarea: true }) +
+        pairField('状态标签（如：寻找组队中）', 'data.status', d.status) +
+      '</div>' +
+      '<div class="panel"><h3><span class="idx">// 02</span> 日 / 夜背景大图 <span class="sub">鼠标划过会从「日」揭示出「夜」</span></h3>' +
+        imageField('白天场景图（底图）', 'data.heroImages.base', (d.heroImages || {}).base, '建议 1920 宽横图') +
+        imageField('夜晚场景图（被光斑揭示的图）', 'data.heroImages.reveal', (d.heroImages || {}).reveal, '建议与白天图同角度，方便切换') +
+      '</div>' +
+      '<div class="panel"><h3><span class="idx">// 03</span> 代表作卡片（首屏左下角）</h3>' +
+        pairField('项目名', 'data.featured.title', d.featured.title) +
+        pairField('一句话描述', 'data.featured.desc', d.featured.desc) +
+        textField('点击「查看项目」跳转到', 'data.featured.link', d.featured.link, '#portfolio 或 https://…') +
+        imageField('缩略图', 'data.featured.thumb', d.featured.thumb) +
+      '</div>' +
+      '<div class="panel"><h3><span class="idx">// 04</span> 右下角参数行</h3>' +
+        d.heroSpecs.map(function (r, i) {
+          return '<div class="list-item">' + listHead('0' + (i + 1), 'data.heroSpecs', i, d.heroSpecs.length, previewOf({ title: r.label })) +
+            pairField('名称', 'data.heroSpecs.' + i + '.label', r.label) +
+            pairField('值', 'data.heroSpecs.' + i + '.value', r.value) +
+          '</div>';
+        }).join('') +
+        addRow('data.heroSpecs', '添加一行参数') +
+      '</div>'
+    );
+  }
+
+  function tabAbout() {
+    var a = S.data.about;
+    return (
+      '<div class="tip">「关于我」板块：照片、一句话介绍、详细介绍段落和标签。</div>' +
+      '<div class="panel"><h3><span class="idx">// 01</span> 照片与介绍</h3>' +
+        imageField('个人照片（不设置则显示字母头像）', 'data.about.photo', a.photo, '建议方形图，会自动裁剪') +
+        pairField('一句话介绍', 'data.about.oneLiner', a.oneLiner) +
+      '</div>' +
+      '<div class="panel"><h3><span class="idx">// 02</span> 详细介绍段落</h3>' +
+        (a.bio || []).map(function (p, i) {
+          return '<div class="list-item">' + listHead('段 ' + (i + 1), 'data.about.bio', i, a.bio.length, (p.zh || '').slice(0, 26)) +
+            pairField('内容', 'data.about.bio.' + i, p, { textarea: true }) +
+          '</div>';
+        }).join('') +
+        addRow('data.about.bio', '添加一段介绍') +
+      '</div>' +
+      '<div class="panel"><h3><span class="idx">// 03</span> 标签</h3>' +
+        tagsPairField('关键词标签', 'data.about.chips', a.chips) +
+      '</div>'
+    );
+  }
+
+  function tabTimeline() {
+    var list = S.data.timeline;
+    return (
+      '<div class="tip">「经历」时间线。列表会按这里的顺序显示（可用 ↑↓ 调整），建议最新的在最上面。</div>' +
+      '<div class="panel"><h3><span class="idx">// 01</span> 经历条目</h3>' +
+        list.map(function (item, i) {
+          var p = 'data.timeline.' + i;
+          return '<div class="list-item">' +
+            listHead('0' + (i + 1), 'data.timeline', i, list.length, previewOf(item)) +
+            pairField('时间', p + '.when', item.when) +
+            '<div class="field"><label class="check-row"><input type="checkbox" data-check="' + p + '.current"' + (item.current ? ' checked' : '') + '> 进行中（会显示「进行中」徽章，且节点高亮）</label></div>' +
+            pairField('标题', p + '.title', item.title) +
+            pairField('机构 / 学校', p + '.org', item.org) +
+            pairField('描述', p + '.desc', item.desc, { textarea: true }) +
+            tagsPairField('标签', p + '.tags', item.tags) +
+          '</div>';
+        }).join('') +
+        addRow('data.timeline', '添加一段经历') +
+      '</div>'
+    );
+  }
+
+  function tabSkills() {
+    var list = S.data.skills;
+    return (
+      '<div class="tip">技能分四类卡片展示，每项技能可设 1–5 级熟练度（5 = 精通）。</div>' +
+      list.map(function (g, gi) {
+        var gp = 'data.skills.' + gi;
+        return '<div class="panel"><h3><span class="idx">// ' + '0' + (gi + 1) + '</span> 技能分组 <span class="sub">' + esc((g.name && g.name.zh) || '') + '</span></h3>' +
+          '<div class="list-item">' +
+            listHead('组', 'data.skills', gi, list.length, previewOf(g)) +
+            pairField('分组名', gp + '.name', g.name) +
+            (g.items || []).map(function (it, ii) {
+              return '<div class="list-item">' +
+                listHead('项 ' + (ii + 1), gp + '.items', ii, (g.items || []).length, previewOf(it)) +
+                pairField('技能名', gp + '.items.' + ii + '.name', it.name) +
+                '<div class="field"><label>熟练度</label><select data-path="' + gp + '.items.' + ii + '.level">' +
+                  [1, 2, 3, 4, 5].map(function (lv) { return '<option value="' + lv + '"' + (Number(it.level) === lv ? ' selected' : '') + '>' + lv + ' 级 · ' + ['', '了解', '入门', '掌握', '熟练', '精通'][lv] + '</option>'; }).join('') +
+                '</select></div>' +
+              '</div>';
+            }).join('') +
+            addRow(gp + '.items', '添加技能项') +
+          '</div>' +
+        '</div>';
+      }).join('') +
+      '<div class="add-row"><button class="btn" type="button" data-act="add" data-list="data.skills">＋ 添加技能分组</button></div>'
+    );
+  }
+
+  function tabProjects() {
+    var list = S.data.projects;
+    return (
+      '<div class="tip">作品集卡片。图片可直接上传；视频支持粘贴 B 站 / YouTube 的嵌入地址（B 站视频 → 分享 → 复制嵌入代码里的 player.bilibili.com/... 地址）。</div>' +
+      '<div class="panel"><h3><span class="idx">// 01</span> 项目列表</h3>' +
+        list.map(function (p, i) {
+          var pp = 'data.projects.' + i;
+          return '<div class="list-item">' +
+            listHead('0' + (i + 1), 'data.projects', i, list.length, previewOf(p)) +
+            pairField('项目名', pp + '.title', p.title) +
+            pairField('描述', pp + '.desc', p.desc, { textarea: true }) +
+            tagsPlainField('技术标签', pp + '.tags', p.tags) +
+            textField('项目链接（查看项目按钮跳转）', pp + '.link', p.link, 'https://github.com/…') +
+            imageField('封面图（不设置则显示编号占位图）', pp + '.thumb', p.thumb) +
+            textField('视频嵌入地址（可选）', pp + '.video', p.video, 'https://player.bilibili.com/player.html?bvid=… 或 https://www.youtube.com/embed/…') +
+          '</div>';
+        }).join('') +
+        addRow('data.projects', '添加项目') +
+      '</div>'
+    );
+  }
+
+  function tabHonors() {
+    var certs = S.data.certs, quotes = S.data.quotes;
+    return (
+      '<div class="tip">获奖证书 + 别人的推荐语。</div>' +
+      '<div class="panel"><h3><span class="idx">// 01</span> 获奖与认证</h3>' +
+        certs.map(function (c, i) {
+          return '<div class="list-item">' +
+            listHead('0' + (i + 1), 'data.certs', i, certs.length, previewOf(c)) +
+            pairField('奖项 / 证书名', 'data.certs.' + i + '.name', c.name) +
+            pairField('颁发方', 'data.certs.' + i + '.issuer', c.issuer) +
+            textField('年份', 'data.certs.' + i + '.year', c.year, '2024') +
+          '</div>';
+        }).join('') +
+        addRow('data.certs', '添加奖项') +
+      '</div>' +
+      '<div class="panel"><h3><span class="idx">// 02</span> 背书 / 推荐语</h3>' +
+        quotes.map(function (q, i) {
+          return '<div class="list-item">' +
+            listHead('0' + (i + 1), 'data.quotes', i, quotes.length, (q.person && q.person.zh) || '') +
+            pairField('推荐语', 'data.quotes.' + i + '.text', q.text, { textarea: true }) +
+            pairField('推荐人', 'data.quotes.' + i + '.person', q.person) +
+            pairField('推荐人身份', 'data.quotes.' + i + '.role', q.role) +
+          '</div>';
+        }).join('') +
+        addRow('data.quotes', '添加推荐语') +
+      '</div>'
+    );
+  }
+
+  function tabBlog() {
+    var list = S.data.posts;
+    return (
+      '<div class="tip">文章列表。链接可以填知乎 / 公众号 / 掘金等平台的文章地址。</div>' +
+      '<div class="panel"><h3><span class="idx">// 01</span> 文章</h3>' +
+        list.map(function (p, i) {
+          return '<div class="list-item">' +
+            listHead('0' + (i + 1), 'data.posts', i, list.length, (p.title && p.title.zh) || '') +
+            textField('日期', 'data.posts.' + i + '.date', p.date, '2026.08') +
+            pairField('标题', 'data.posts.' + i + '.title', p.title) +
+            tagsPairField('标签', 'data.posts.' + i + '.tags', p.tags) +
+            textField('文章链接', 'data.posts.' + i + '.url', p.url, 'https://…') +
+          '</div>';
+        }).join('') +
+        addRow('data.posts', '添加文章') +
+      '</div>'
+    );
+  }
+
+  function tabContact() {
+    var c = S.data.contact;
+    return (
+      '<div class="tip">联系方式板块与全站各处用到的账号信息。</div>' +
+      '<div class="panel"><h3><span class="idx">// 01</span> 联系方式</h3>' +
+        textField('邮箱', 'data.contact.email', c.email, 'hello@you.com') +
+        textField('电话（显示在「组队通行证」上）', 'data.contact.phone', c.phone, '13800000000') +
+        textField('GitHub 主页', 'data.contact.github', c.github, 'https://github.com/…') +
+        textField('B 站主页', 'data.contact.bilibili', c.bilibili, 'https://space.bilibili.com/…') +
+        textField('知乎主页', 'data.contact.zhihu', c.zhihu, 'https://www.zhihu.com/people/…') +
+        textField('微信号', 'data.contact.wechatId', c.wechatId) +
+        textField('简历文件路径（可先把 PDF 传到仓库 assets/ 目录）', 'data.contact.resume', c.resume, 'assets/resume.pdf') +
+      '</div>'
+    );
+  }
+
+  /* ================================================================
+     事件：tab 切换 / 输入绑定 / 结构操作 / 图片
+     ================================================================ */
+  document.addEventListener('click', function (e) {
+    var tabBtn = e.target.closest('[data-tab]');
+    if (tabBtn) {
+      tab = tabBtn.getAttribute('data-tab');
+      buildTabs();
+      renderTab();
+      return;
+    }
+
+    var act = e.target.closest('[data-act]');
+    if (act) {
+      var kind = act.getAttribute('data-act');
+      var listPath = act.getAttribute('data-list');
+      var idx = Number(act.getAttribute('data-i'));
+
+      if (kind === 'add') {
+        var arr = getP(S, listPath);
+        var factory = {
+          'data.heroSpecs': function () { return { label: { zh: '', en: '' }, value: { zh: '', en: '' } }; },
+          'data.about.bio': function () { return { zh: '', en: '' }; },
+          'data.timeline': function () { return { when: { zh: '', en: '' }, current: false, title: { zh: '', en: '' }, org: { zh: '', en: '' }, desc: { zh: '', en: '' }, tags: [] }; },
+          'data.skills': function () { return { name: { zh: '', en: '' }, items: [] }; },
+          'data.projects': function () { return { title: { zh: '', en: '' }, desc: { zh: '', en: '' }, tags: [], link: '', thumb: '', video: '' }; },
+          'data.certs': function () { return { name: { zh: '', en: '' }, issuer: { zh: '', en: '' }, year: '' }; },
+          'data.quotes': function () { return { text: { zh: '', en: '' }, person: { zh: '', en: '' }, role: { zh: '', en: '' } }; },
+          'data.posts': function () { return { date: '', title: { zh: '', en: '' }, tags: [], url: '' }; }
+        }[listPath];
+        arr.push(factory ? factory() : {});
+        markDirty(); renderTab();
+        return;
+      }
+      if (kind === 'del') {
+        if (!confirm('确定删除这一项？')) return;
+        var arr2 = getP(S, listPath);
+        arr2.splice(idx, 1);
+        markDirty(); renderTab();
+        return;
+      }
+      if (kind === 'up' || kind === 'down') {
+        var arr3 = getP(S, listPath);
+        var j = kind === 'up' ? idx - 1 : idx + 1;
+        if (j < 0 || j >= arr3.length) return;
+        var tmp = arr3[idx]; arr3[idx] = arr3[j]; arr3[j] = tmp;
+        markDirty(); renderTab();
+        return;
+      }
+      if (kind === 'img-pick') {
+        imgCtx = act.getAttribute('data-target');
+        $('#img-file-input').value = '';
+        $('#img-file-input').click();
+        return;
+      }
+      if (kind === 'img-clear') {
+        var cp = act.getAttribute('data-target');
+        setP(S, cp, '');
+        markDirty(); renderTab();
+        return;
+      }
+    }
+  });
+
+  /* 输入绑定（含标签逗号解析 / 复选框 / 下拉） */
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+
+    if (t.dataset.tags) {
+      var arr = getP(S, t.dataset.target) || [];
+      var parts = t.value.split(/[，,、]\s*/).map(function (x) { return x.trim(); });
+      var other = t.dataset.tags === 'zh' ? 'en' : 'zh';
+      var next = [];
+      for (var i = 0; i < Math.max(parts.length, arr.length); i++) {
+        if (!parts[i] && !(arr[i] && arr[i][other])) continue;
+        var item = {};
+        item[t.dataset.tags] = parts[i] || '';
+        item[other] = (arr[i] && arr[i][other]) || '';
+        next.push(item);
+      }
+      setP(S, t.dataset.target, next);
+      markDirty();
+      return;
+    }
+
+    if (t.dataset.plainTags) {
+      setP(S, t.dataset.plainTags, t.value.split(/[，,、]\s*/).map(function (x) { return x.trim(); }).filter(Boolean));
+      markDirty();
+      return;
+    }
+
+    if (t.dataset.path) {
+      setP(S, t.dataset.path, t.value);
+      markDirty();
+      return;
+    }
+  });
+
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.dataset.check) { setP(S, t.dataset.check, t.checked); markDirty(); return; }
+    if (t.tagName === 'SELECT' && t.dataset.path) { setP(S, t.dataset.path, Number(t.value)); markDirty(); return; }
+  });
+
+  /* 导入 content.js（本地模式 / file:// 打开时用） */
+  $('#import-btn').addEventListener('click', function () {
+    $('#content-file-input').value = '';
+    $('#content-file-input').click();
+  });
+  $('#content-file-input').addEventListener('change', function () {
+    var file = this.files && this.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        S = parseContentText(String(reader.result));
+        renderTab();
+        markDirty();
+        toast('已导入 content.js，记得点「保存更改」写回文件');
+      } catch (e) {
+        toast('导入失败：' + e.message, true);
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  /* 图片上传 */
+  $('#img-file-input').addEventListener('change', function () {
+    var file = this.files && this.files[0];
+    if (!file || !imgCtx) return;
+    var btnNote = $('#save-note');
+    btnNote.textContent = '图片处理中…';
+    compressImage(file, 1600, function (dataUrl) {
+      if (!dataUrl) { toast('图片读取失败', true); btnNote.textContent = ''; return; }
+      if (cfg.mode === 'github') {
+        btnNote.textContent = '图片上传中…';
+        ghUploadAsset(dataUrl).then(function (relPath) {
+          applyImage(relPath);
+          toast('图片已上传到仓库 assets/ 目录');
+        }).catch(function (e) {
+          toast('上传失败：' + e.message + '（已改用内嵌方式保存）', true);
+          applyImage(dataUrl);
+        }).then(function () { btnNote.textContent = dirty ? '有未保存的修改' : ''; });
+      } else {
+        applyImage(dataUrl);
+        toast('图片已插入（本地模式以内嵌方式保存）');
+        btnNote.textContent = dirty ? '有未保存的修改' : '';
+      }
+    });
+
+    function applyImage(val) {
+      setP(S, imgCtx, val);
+      markDirty();
+      renderTab();
+    }
+  });
+
+  function compressImage(file, maxDim, cb) {
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function () {
+      try {
+        var scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+        var c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(img.width * scale));
+        c.height = Math.max(1, Math.round(img.height * scale));
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        cb(c.toDataURL('image/jpeg', 0.85));
+      } catch (e) { cb(null); }
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); cb(null); };
+    img.src = url;
+  }
+
+  /* ================================================================
+     修改后台账号密码
+     ================================================================ */
+  $('#cred-btn').addEventListener('click', function () {
+    $('#cred-cur').value = '';
+    $('#cred-new-user').value = '';
+    $('#cred-new-pass').value = '';
+    $('#cred-new-pass2').value = '';
+    $('#cred-error').textContent = '';
+    $('#cred-note').textContent = cfg && cfg.mode === 'github'
+      ? '修改后本机立即生效，并自动提交到 GitHub（约 1 分钟后所有设备使用新凭据）。'
+      : '修改后本机立即生效；保存 admin-auth.json 并替换网站目录里的同名文件后，其他设备同步生效。';
+    $('#cred-dialog').classList.remove('hidden');
+  });
+
+  $('#cred-cancel').addEventListener('click', function () {
+    $('#cred-dialog').classList.add('hidden');
+  });
+
+  $('#cred-save').addEventListener('click', function () {
+    var cur = $('#cred-cur').value;
+    var nu = $('#cred-new-user').value.trim();
+    var np = $('#cred-new-pass').value;
+    var np2 = $('#cred-new-pass2').value;
+    var err = $('#cred-error');
+    err.textContent = '';
+    if (utf8sha256(cur) !== authData.pass) { err.textContent = '当前密码不正确。'; return; }
+    if (nu.length < 2) { err.textContent = '新账号至少 2 个字符。'; return; }
+    if (np.length < 4) { err.textContent = '新密码至少 4 位。'; return; }
+    if (np !== np2) { err.textContent = '两次输入的新密码不一致。'; return; }
+
+    authData = { user: utf8sha256(nu), pass: utf8sha256(np) };
+    saveJSON(LS_AUTH, authData);
+    var note = $('#cred-note');
+    var btn = $('#cred-save');
+    btn.disabled = true;
+
+    if (cfg && cfg.mode === 'github') {
+      note.textContent = '正在同步到 GitHub…';
+      apiGet(ghUrl(AUTH_FILE, cfg.branch))
+        .then(function (j) { return j.sha; }, function () { return undefined; })
+        .then(function (sha) {
+          return apiPut(ghUrl(AUTH_FILE), {
+            message: '更新后台登录凭据',
+            content: b64enc(JSON.stringify(authData, null, 2) + '\n'),
+            branch: cfg.branch,
+            sha: sha
+          });
+        })
+        .then(function () {
+          note.textContent = '已保存 ✓ 本机立即生效，线上约 1 分钟后同步，所有设备使用新账号密码。';
+          toast('账号密码已更新');
+        })
+        .catch(function (e) {
+          note.textContent = '已在本机生效，但同步 GitHub 失败：' + e.message;
+          toast('同步 GitHub 失败', true);
+        })
+        .then(function () { btn.disabled = false; });
+    } else {
+      var text = JSON.stringify(authData, null, 2) + '\n';
+      if (window.showSaveFilePicker) {
+        window.showSaveFilePicker({ suggestedName: AUTH_FILE, types: [{ description: 'JSON 文件', accept: { 'application/json': ['.json'] } }] })
+          .then(function (pk) { return pk.createWritable(); })
+          .then(function (w) { return w.write(text).then(function () { return w.close(); }); })
+          .then(function () {
+            note.textContent = '已保存 admin-auth.json —— 请用它替换网站目录里的同名文件，其他设备才能用新账号密码。';
+            toast('账号密码已更新（本机已生效）');
+          })
+          .catch(function (e) {
+            if (e && e.name === 'AbortError') { note.textContent = '已在本机生效（未导出文件）。'; btn.disabled = false; return; }
+            downloadFile(AUTH_FILE, text, 'application/json');
+            note.textContent = '已下载 admin-auth.json —— 请替换网站目录里的同名文件。';
+          })
+          .then(function () { btn.disabled = false; });
+      } else {
+        downloadFile(AUTH_FILE, text, 'application/json');
+        note.textContent = '已下载 admin-auth.json —— 请替换网站目录里的同名文件。';
+        btn.disabled = false;
+      }
+    }
+  });
+
+  /* ================================================================
+     启动
+     ================================================================ */
+  function showLoading(msg) {
+    var m = $('#loading-mask');
+    m.textContent = msg || '处理中…';
+    m.classList.remove('hidden');
+  }
+  function hideLoading() {
+    $('#loading-mask').classList.add('hidden');
+  }
+
+  (function boot() {
+    resolveAuth().then(function () {
+      fillGhFields();
+      if (sessionStorage.getItem(SESSION) === '1') {
+        afterGate();
+      } else {
+        showGate();
+      }
+    });
+  })();
+})();
+</script>
+
+</body>
+</html>
