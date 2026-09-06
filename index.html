@@ -1612,15 +1612,17 @@
       rgba(251, 219, 175, 0.9) 14px 15px, transparent 15px 19px);
   }
 
-  /* 真实二维码（vCard：扫码保存联系方式） */
+  /* 真实二维码（vCard）· 主题化配色：奶油底 + 深棕码点 + 橙描边 */
   .pt-qr {
     width: 100%;
-    background: #FFF9EE;
+    background: var(--cream);
+    border: 1px solid rgba(224, 112, 32, 0.55);
     border-radius: 10px;
     padding: 7px;
     display: grid;
     place-items: center;
     min-height: 84px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
   }
 
   .pt-qr svg {
@@ -1628,6 +1630,8 @@
     height: 86px;
     display: block;
   }
+
+  .pt-qr svg path { fill: #33200E; }
 
   .pt-qr-label {
     font-family: 'Orbitron-Medium', 'Arial Narrow', sans-serif;
