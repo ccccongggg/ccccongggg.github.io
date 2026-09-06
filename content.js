@@ -42,7 +42,7 @@ window.SITE_CONTENT = {
       "github": "https://github.com/ccccongggg",
       "bilibili": "https://space.bilibili.com/yourid",
       "zhihu": "https://www.zhihu.com/people/yourname",
-      "wechatId": "YXCong6001",
+      "wechatId": "YXCong600",
       "resume": "assets/resume.pdf"
     },
     "featured": {
