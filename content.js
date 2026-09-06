@@ -100,7 +100,7 @@ window.SITE_CONTENT = {
       }
     ],
     "about": {
-      "photo": "assets/avatar-processed.png",
+      "photo": "",
       "oneLiner": {
         "zh": "以赛代练，把想法变成会动的东西。",
         "en": "Learning by competing — building ideas that move."
