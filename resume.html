@@ -58,11 +58,31 @@
   }
   .note { max-width: 210mm; margin: 0 auto 24px; font-size: 12px; color: var(--sub); text-align: right; }
 
+  .dl-btn {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 50;
+    background: var(--orange);
+    color: #fff;
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 8px 24px rgba(217, 106, 18, 0.35);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .dl-btn:hover { transform: translateY(-1px); }
+  .dl-btn[disabled] { opacity: 0.6; cursor: wait; transform: none; }
+
   @page { size: A4; margin: 0; }
   @media print {
     body { background: #fff; }
     .page { margin: 0; box-shadow: none; width: auto; min-height: auto; padding: 12mm 14mm; }
     .print-bar, .note { display: none; }
+    .dl-btn { display: none !important; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
@@ -145,7 +165,83 @@
   </p>
 </div>
 
-<div class="note">※ 投递前请将【占位】内容补充完整；导出 PDF：点击上方按钮或 Ctrl+P → 另存为 PDF。</div>
+<div class="note">※ 投递前请将【占位】内容补充完整；点击右上角「下载 PDF」即可导出最新版简历。</div>
+
+<button class="dl-btn" id="dl-btn" type="button">下载 PDF</button>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* 纯前端 JPEG → PDF 封装（单页 A4） */
+  function jpegBase64ToPdf(jpegB64, wPx, hPx) {
+    var jpeg = atob(jpegB64);
+    var parts = [];
+    var offset = 0, offsets = [0];
+    function push(s) { parts.push(s); offset += s.length; }
+    var pageW = 595.28, pageH = 841.89;
+    push('%PDF-1.4\n');
+    offsets[1] = offset; push('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+    offsets[2] = offset; push('2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n');
+    offsets[3] = offset; push('3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pageW + ' ' + pageH + '] /Resources << /XObject << /Im1 4 0 R >> /ProcSet [/PDF /ImageC] >> /Contents 5 0 R >>\nendobj\n');
+    offsets[4] = offset; push('4 0 obj\n<< /Type /XObject /Subtype /Image /Width ' + wPx + ' /Height ' + hPx + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpeg.length + ' >>\nstream\n');
+    push(jpeg);
+    push('\nendstream\nendobj\n');
+    var content = 'q\n' + pageW + ' 0 0 ' + pageH + ' 0 0 cm\n/Im1 Do\nQ';
+    offsets[5] = offset; push('5 0 obj\n<< /Length ' + content.length + ' >>\nstream\n' + content + '\nendstream\nendobj\n');
+    var xrefStart = offset;
+    var xref = 'xref\n0 6\n0000000000 65535 f \n';
+    for (var n = 1; n <= 5; n++) xref += String(offsets[n]).padStart(10, '0') + ' 00000 n \n';
+    xref += 'trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n' + xrefStart + '\n%%EOF';
+    push(xref);
+    var pdfStr = parts.join('');
+    var bytes = new Uint8Array(pdfStr.length);
+    for (var i = 0; i < pdfStr.length; i++) bytes[i] = pdfStr.charCodeAt(i) & 0xFF;
+    return bytes;
+  }
+
+  function triggerDownload(bytes) {
+    var blob = new Blob([bytes], { type: 'application/pdf' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '印贤聪-简历.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  var busy = false;
+  function downloadPdf() {
+    if (busy) return;
+    var btn = document.getElementById('dl-btn');
+    if (typeof html2canvas === 'undefined') { alert('渲染库加载失败，请检查网络后重试'); return; }
+    busy = true;
+    btn.disabled = true;
+    btn.textContent = '正在生成 PDF…';
+    html2canvas(document.querySelector('.page'), { scale: 2, backgroundColor: '#FFFFFF', logging: false })
+      .then(function (canvas) {
+        var dataURL = canvas.toDataURL('image/jpeg', 0.92);
+        var bytes = jpegBase64ToPdf(dataURL.split(',')[1], canvas.width, canvas.height);
+        triggerDownload(bytes);
+        btn.textContent = '✓ 已下载';
+        setTimeout(function () { btn.textContent = '下载 PDF'; btn.disabled = false; busy = false; }, 1600);
+      })
+      .catch(function (e) {
+        btn.textContent = '下载 PDF';
+        busy = false;
+        alert('生成失败：' + (e && e.message ? e.message : '未知错误') + '，请重试');
+      });
+  }
+
+  document.getElementById('dl-btn').addEventListener('click', downloadPdf);
+
+  /* 带 ?autodownload=1 打开时，自动生成并下载 */
+  if (new URLSearchParams(location.search).get('autodownload') === '1') {
+    setTimeout(downloadPdf, 900);
+  }
+})();
+</script>
 
 </body>
 </html>
