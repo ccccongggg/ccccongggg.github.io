@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>印贤聪 · 个人简历（实习投递）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --ink: #23201C; --sub: #5F5850; --orange: #D96A12; --line: #E3DCD2; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    background: #EFEAE2;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.62;
+  }
+  .page {
+    width: 210mm;
+    min-height: 296mm;
+    margin: 24px auto;
+    background: #fff;
+    padding: 13mm 15mm;
+    box-shadow: 0 6px 30px rgba(0,0,0,.12);
+  }
+
+  /* ===== 头部 ===== */
+  .head { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid var(--orange); padding-bottom: 10px; }
+  .head h1 { font-size: 30px; letter-spacing: 6px; }
+  .head .job { font-size: 14.5px; color: var(--orange); font-weight: 700; margin-top: 4px; letter-spacing: 1px; }
+  .head .contact { text-align: right; font-size: 12px; color: var(--sub); line-height: 1.8; }
+  .head .contact b { color: var(--ink); }
+
+  /* ===== 区块 ===== */
+  h2 { font-size: 14.5px; color: var(--orange); letter-spacing: 2px; margin: 14px 0 7px; display: flex; align-items: center; gap: 8px; }
+  h2::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+  .edu-row { display: flex; justify-content: space-between; font-size: 13.5px; }
+  .edu-row b { font-size: 14px; }
+  .edu-sub { color: var(--sub); font-size: 12.5px; }
+
+  .item { margin-bottom: 11px; }
+  .item-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .item-head b { font-size: 13.8px; }
+  .item-head span { font-size: 12px; color: var(--sub); white-space: nowrap; }
+  .item ul { margin: 3px 0 0 18px; }
+  .item li { margin-bottom: 2.5px; }
+  .item li b { color: var(--orange); font-weight: 600; }
+
+  .skills { display: grid; grid-template-columns: 88px 1fr; gap: 4px 12px; font-size: 12.8px; }
+  .skills b { color: var(--sub); font-weight: 500; }
+
+  .self { font-size: 12.8px; }
+
+  .print-bar { max-width: 210mm; margin: 0 auto 10px; text-align: right; }
+  .print-bar button {
+    background: var(--orange); color: #fff; border: 0; border-radius: 8px;
+    padding: 8px 18px; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  .note { max-width: 210mm; margin: 0 auto 24px; font-size: 12px; color: var(--sub); text-align: right; }
+
+  @page { size: A4; margin: 0; }
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; box-shadow: none; width: auto; min-height: auto; padding: 12mm 14mm; }
+    .print-bar, .note { display: none; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="print-bar"><button onclick="window.print()">🖨 打印 / 导出 PDF（A4）</button></div>
+
+<div class="page">
+  <div class="head">
+    <div>
+      <h1>印贤聪</h1>
+      <div class="job">求职意向：智能制造 / 硬件开发 / 嵌入式方向 · 实习</div>
+    </div>
+    <div class="contact">
+      <b>18620990303</b> ｜ 195311697@qq.com<br>
+      济南（求学）· 广州（常驻）｜ 政治面貌：团员<br>
+      GitHub：github.com/ccccongggg
+    </div>
+  </div>
+
+  <h2>教育背景</h2>
+  <div class="edu-row">
+    <span><b>齐鲁理工学院</b> ｜ 智能制造工程 · 本科</span>
+    <span class="edu-sub">2025.09 — 2029.09</span>
+  </div>
+  <div class="edu-sub">主修课程：【占位 · 填写与岗位相关课程】 ｜ 绩点 / 排名：【占位】</div>
+
+  <h2>竞赛与项目经历</h2>
+
+  <div class="item">
+    <div class="item-head"><b>SheNicest 裂变 · 千人黑客松 ｜ 实体语音控制终端</b><span>2026.08 ｜ 核心开发 & 项目负责人（2 人团队）</span></div>
+    <ul>
+      <li>面向"语音助手闲聊为主、控制为辅"的行业痛点，打造以 <b>Mac 自动化控制为核心、AI 对话为辅助</b>的实体语音控制终端；首创<b>控制指令优先调度</b>架构，业务全自研，支持<b>全链路本地离线</b>与双供电 + WiFi/USB 双链路冗余。</li>
+      <li>独立完成多款外观三维设计并通过 <b>3D 打印</b>实现实体化；承担嵌入式开发（开机界面与互动 UI）；基于二维云台二次开发实现<b>人脸跟踪 / 人脸识别</b>；独立开发项目可视化网站。</li>
+      <li>获奖结果：【占位 · 待公布】；完整跑通 AI 硬件黑客松从 idea 到实物的全流程。</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item-head"><b>全国大学生智能汽车竞赛 ｜ 负压循迹智能车</b><span>2026.07 ｜ 队长 / 硬件负责人</span></div>
+    <ul>
+      <li>自主设计 <b>70×50mm 一体化 PCB 核心板</b>，集成运放、MCU、MPU6050、电源与主控；自行设计小车底盘。</li>
+      <li>负压电机吸附底盘，高精度电感采集模拟信号经 <b>ADC</b> 实时控制电机，实现稳定循迹。</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item-head"><b>全国大学生电子设计竞赛 ｜ 小球平衡控制装置</b><span>2026.07 ｜ 队长 / 硬件负责人</span></div>
+    <ul>
+      <li>设计<b>模块化母版 PCB</b>，各传感器模块拔插互联、实现板间通讯。</li>
+      <li><b>MaixCAM 视觉</b> + 步进电机与齿轮传动机构，实现水管内小球升降动态平衡；完成底盘循迹代码。</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item-head"><b>机电产品创新设计大赛 / 先进成图大赛 ｜ 三维设计与轻量化</b><span>2026.05 – 2026.06 ｜ 三维设计负责人 / 核心成员</span></div>
+    <ul>
+      <li>省机电产品创新设计大赛：负责三维建模并搭建实物，获<b>省级二等奖</b>。</li>
+      <li>全国先进成图大赛：主赛项 + 轻量化设计分赛项，实践 <b>AI 轻量化设计、受力分析与拓扑优化</b>。</li>
+    </ul>
+  </div>
+
+  <h2>荣誉奖项</h2>
+  <div class="item" style="font-size:12.8px;">
+    山东省机电产品创新设计大赛二等奖（2026）· 山东省成图大赛轻量化设计与 AI 应用二等奖（2026）· 成图大赛机械成图团体三等奖（2026）· 中国电子学会 PCB 初级工程师认证（2025）· 校级辩论赛最佳辩手（2026）· 军训训练标兵（2025）
+  </div>
+
+  <h2>专业技能</h2>
+  <div class="skills">
+    <b>硬件电路</b><span>PCB 设计（认证初级工程师，一体化核心板 / 模块化母板实战）、传感器应用、电源与运放电路</span>
+    <b>三维与制造</b><span>机械三维成图、3D 打印实体化、AI 轻量化设计与拓扑优化</span>
+    <b>编程开发</b><span>C 语言（计算机二级）、Python 基础、单片机开发、Vibe Coding</span>
+    <b>协作工具</b><span>飞书 / WPS / ima 思维导图，规范化文档与流程管理</span>
+  </div>
+
+  <h2>自我评价</h2>
+  <p class="self">
+    智能制造工程专业背景 + 认证 PCB 工程师的"硬件打底"选手；一年内参加 5 项省级以上赛事并多次获奖，习惯在团队中同时承担硬件、结构与开发工作。信奉<b>以赛代练</b>：知识面广、强整合、执行力与资源整合能力突出（校辩论赛最佳辩手）。短期主攻机械臂强化学习与数字孪生，长期目标是成为工厂 FDE（前向部署）工程师——对"让技术在真实产线落地"有清晰的职业路线。
+  </p>
+</div>
+
+<div class="note">※ 投递前请将【占位】内容补充完整；导出 PDF：点击上方按钮或 Ctrl+P → 另存为 PDF。</div>
+
+</body>
+</html>
