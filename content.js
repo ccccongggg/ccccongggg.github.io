@@ -139,6 +139,10 @@ window.SITE_CONTENT = {
         {
           "zh": "资源整合",
           "en": "Resource Integration"
+        },
+        {
+          "zh": "班长",
+          "en": "Class Monitor"
         }
       ]
     },
@@ -315,12 +319,12 @@ window.SITE_CONTENT = {
           "en": "Qilu Institute of Technology · Intelligent Manufacturing"
         },
         "org": {
-          "zh": "本科在读 · 学生会办公室部干事",
-          "en": "Undergraduate · Student Union Office Member"
+          "zh": "本科在读 · 班长 · 学生会办公室部干事",
+          "en": "Undergraduate · Class Monitor · Student Union Office"
         },
         "desc": {
-          "zh": "系统学习智能制造与电路基础，学业之余以赛代练。担任学生会办公室部干事：负责会议记录与文件归档、办公物资登记盘点、文书撰写与各类活动后勤支持；获 2026 年校级辩论赛「最佳辩手」、2025 年新生军训「训练标兵」。",
-          "en": "Studying smart manufacturing and circuit fundamentals while competing. Serving in the Student Union Office: meeting minutes and archives, supplies management, document drafting and event logistics. Won Best Debater (campus, 2026) and Training Model (military training, 2025)."
+          "zh": "担任班长，负责班级日常事务管理与活动组织。系统学习智能制造与电路基础，学业之余以赛代练。任学生会办公室部干事：负责会议记录与文件归档、物资登记盘点、文书撰写与活动后勤；获 2026 年校级辩论赛「最佳辩手」、2025 年新生军训「训练标兵」。",
+          "en": "Serving as class monitor, responsible for daily class management and event organization. Studying smart manufacturing and circuit fundamentals while competing. Student Union Office member: meeting minutes, archives, supplies management and event logistics. Won Best Debater (2026) and Training Model (2025)."
         },
         "tags": [
           {
@@ -622,6 +626,17 @@ window.SITE_CONTENT = {
           "en": "HR & Social Security Training Center"
         },
         "year": "2025"
+      },
+      {
+        "name": {
+          "zh": "计算机二级（C 语言）证书",
+          "en": "Computer Rank Level-2 (C Language) Certificate"
+        },
+        "issuer": {
+          "zh": "教育部考试中心",
+          "en": "National Education Examinations Authority"
+        },
+        "year": "—"
       }
     ],
     "quotes": [],
@@ -702,7 +717,7 @@ window.SITE_CONTENT = {
         "en": "TEAM PASS"
       },
       "title": {
-        "zh": "一起做点东西",
+        "zh": "一起做点项目",
         "en": "LET'S BUILD"
       },
       "nameLabel": {
@@ -852,7 +867,7 @@ window.SITE_CONTENT = {
       "contact": {
         "tag": "// 07 · CONTACT",
         "title": {
-          "zh": "一起做点东西？",
+          "zh": "一起做点项目？",
           "en": "LET'S BUILD SOMETHING"
         },
         "desc": {
