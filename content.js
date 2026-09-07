@@ -25,8 +25,8 @@ window.SITE_CONTENT = {
       ]
     },
     "tagline": {
-      "zh": "智能制造工程在读，中国电子学会认证 PCB 初级工程师，科创黑客松参赛达人。用电路、代码与三维设计把想法变成会动的机器——欢迎来到我的造物台。",
-      "en": "Smart Manufacturing undergraduate, certified PCB engineer (CET China Electronics Society), and hackathon regular. I turn ideas into working machines with circuits, code and 3D design — welcome to my workbench."
+      "zh": "智能制造工程在读，中国电子学会认证 PCB 初级工程师，科创黑客松参赛达人。用电路、代码与三维设计，把想法落地为会动的硬件实物——欢迎来到我的造物台。",
+      "en": "Smart Manufacturing undergraduate, certified PCB engineer (CET China Electronics Society), and hackathon regular. I turn ideas into working hardware with circuits, code and 3D design — welcome to my workbench."
     },
     "status": {
       "zh": "寻找组队中 · OPEN TO TEAM UP",
@@ -102,7 +102,7 @@ window.SITE_CONTENT = {
     "about": {
       "photo": "",
       "oneLiner": {
-        "zh": "以赛代练，把想法变成会动的机器。",
+        "zh": "以赛代练，把想法变成会动的硬件实物。",
         "en": "Learning by competing — building ideas that move."
       },
       "bio": [
