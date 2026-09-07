@@ -102,7 +102,7 @@ window.SITE_CONTENT = {
     "about": {
       "photo": "",
       "oneLiner": {
-        "zh": "以赛代练，把想法变成会动的东西。",
+        "zh": "以赛代练，把想法变成会动的机器。",
         "en": "Learning by competing — building ideas that move."
       },
       "bio": [
