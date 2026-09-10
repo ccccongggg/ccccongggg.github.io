@@ -43,7 +43,11 @@ window.SITE_CONTENT = {
       "bilibili": "https://space.bilibili.com/yourid",
       "zhihu": "https://www.zhihu.com/people/yourname",
       "wechatId": "YXCong6001",
-      "resume": "assets/resume.pdf"
+      "resume": "assets/resume.pdf",
+      "city": {
+        "zh": "济南（求学）· 广州（常驻）",
+        "en": "Jinan (study) · Guangzhou (base)"
+      }
     },
     "featured": {
       "title": {
@@ -640,7 +644,21 @@ window.SITE_CONTENT = {
       }
     ],
     "quotes": [],
-    "posts": []
+    "posts": [],
+    "resume": {
+      "jobTitle": {
+        "zh": "智能制造 / 硬件开发 / 嵌入式方向 · 实习",
+        "en": "Internship · Smart Manufacturing / Hardware / Embedded"
+      },
+      "political": {
+        "zh": "团员",
+        "en": "CYL Member"
+      },
+      "selfEval": {
+        "zh": "智能制造工程专业背景 + 认证 PCB 工程师的「硬件打底」选手；一年内参加 5 项省级以上赛事并多次获奖，习惯在团队中同时承担硬件、结构与开发工作。信奉以赛代练：知识面广、强整合、执行力与资源整合能力突出（校辩论赛最佳辩手）。短期主攻机械臂强化学习与数字孪生，长期目标是成为工厂 FDE（前向部署）工程师——对「让技术在真实产线落地」有清晰的职业路线。",
+        "en": "A hardware-first player with a smart-manufacturing background and PCB engineer certification; competed in 5+ provincial-level contests within a year, usually owning hardware, structure and development at once. Learning by competing — broad knowledge, strong integration, execution and resource coordination (campus Best Debater). Short-term focus: robotic-arm RL and digital twins; long-term goal: a Forward Deployed Engineer (FDE) in factories."
+      }
+    }
   },
   "ui": {
     "docTitle": {
