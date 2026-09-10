@@ -984,7 +984,8 @@
      ================================================================ */
   var TABS = [
     ['hero', '首页'], ['about', '关于我'], ['timeline', '经历'], ['skills', '技能'],
-    ['projects', '作品集'], ['honors', '荣誉 / 背书'], ['blog', '博客'], ['contact', '联系方式']
+    ['projects', '作品集'], ['honors', '荣誉 / 背书'], ['blog', '博客'],
+    ['resume', '简历'], ['contact', '联系方式']
   ];
 
   function buildTabs() {
@@ -996,7 +997,7 @@
   function renderTab() {
     var fn = {
       hero: tabHero, about: tabAbout, timeline: tabTimeline, skills: tabSkills,
-      projects: tabProjects, honors: tabHonors, blog: tabBlog, contact: tabContact
+      projects: tabProjects, honors: tabHonors, blog: tabBlog, resume: tabResume, contact: tabContact
     }[tab];
     $('#editor').innerHTML = fn();
   }
@@ -1186,6 +1187,28 @@
     );
   }
 
+  function tabResume() {
+    var r = S.data.resume || (S.data.resume = {});
+    return (
+      '<div class="tip">「简历」专属字段——简历页（resume.html）与下载的 PDF <b>全部内容</b>都从网站数据实时生成：这里的字段、上面的经历 / 技能 / 荣誉 / 联系方式，改了任意一处，简历都会自动同步。</div>' +
+      '<div class="panel"><h3><span class="idx">// 01</span> 求职意向与基本信息</h3>' +
+        pairField('求职意向', 'data.resume.jobTitle', r.jobTitle) +
+        pairField('政治面貌', 'data.resume.political', r.political) +
+      '</div>' +
+      '<div class="panel"><h3><span class="idx">// 02</span> 自我评价</h3>' +
+        pairField('自我评价段落', 'data.resume.selfEval', r.selfEval, { textarea: true }) +
+      '</div>' +
+      '<div class="panel"><h3><span class="idx">// 03</span> 简历内容的来源（改这些也会同步到简历）</h3>' +
+        '<p style="font-size:12.5px;color:var(--label);line-height:1.9;">' +
+          '· 姓名 / 联系方式 / 城市 → 「联系方式」标签页<br>' +
+          '· 教育背景（在校条目）与竞赛项目经历 → 「经历」标签页<br>' +
+          '· 荣誉奖项 → 「荣誉 / 背书」标签页<br>' +
+          '· 专业技能 → 「技能」标签页' +
+        '</p>' +
+      '</div>'
+    );
+  }
+
   function tabContact() {
     var c = S.data.contact;
     return (
@@ -1193,6 +1216,7 @@
       '<div class="panel"><h3><span class="idx">// 01</span> 联系方式</h3>' +
         textField('邮箱', 'data.contact.email', c.email, 'hello@you.com') +
         textField('电话（显示在「组队通行证」上）', 'data.contact.phone', c.phone, '13800000000') +
+        pairField('所在城市（显示在简历上）', 'data.contact.city', c.city) +
         textField('GitHub 主页', 'data.contact.github', c.github, 'https://github.com/…') +
         textField('B 站主页', 'data.contact.bilibili', c.bilibili, 'https://space.bilibili.com/…') +
         textField('知乎主页', 'data.contact.zhihu', c.zhihu, 'https://www.zhihu.com/people/…') +
