@@ -1194,6 +1194,7 @@
       '<div class="panel"><h3><span class="idx">// 01</span> 求职意向与基本信息</h3>' +
         pairField('求职意向', 'data.resume.jobTitle', r.jobTitle) +
         pairField('政治面貌', 'data.resume.political', r.political) +
+        imageField('简历证件照（显示在简历右上角，留空则不显示）', 'data.resume.photo', r.photo, '建议 3:4 竖版证件照') +
       '</div>' +
       '<div class="panel"><h3><span class="idx">// 02</span> 自我评价</h3>' +
         pairField('自我评价段落', 'data.resume.selfEval', r.selfEval, { textarea: true }) +
