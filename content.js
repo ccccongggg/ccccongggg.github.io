@@ -68,8 +68,8 @@ window.SITE_CONTENT = {
           "en": "HONORS"
         },
         "value": {
-          "zh": "获奖 × 5",
-          "en": "5+ Awards"
+          "zh": "获奖 × 7",
+          "en": "7+ Awards"
         }
       },
       {
