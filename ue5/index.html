@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工业机器人与自动化产线数字孪生演示｜印贤聪</title>
+<meta name="description" content="Unreal Engine 5 工业机器人与自动化产线数字孪生演示平台，48 秒演示视频。">
+<style>
+  :root { --ac:#1F5C4D; --ac2:#2E7A66; --line:#e2e8e5; --ink:#1b1b1b; --gray:#6b6b6b; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#f6f8f7; color:var(--ink);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+    line-height:1.7; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width: 880px; margin:0 auto; padding: 48px 24px 64px; }
+  .kicker { font-size:12px; letter-spacing:2px; color:var(--ac2); font-weight:700; text-transform:uppercase; }
+  h1 { font-size: 26px; letter-spacing:.5px; margin:8px 0 6px; line-height:1.35; }
+  .sub { font-size:13.5px; color:var(--gray); }
+  .sub b { color:var(--ink); }
+  hr { border:0; border-top:2px solid var(--ac); margin:18px 0 22px; }
+  .lead { font-size:15px; color:#2c2c2c; margin-bottom:22px; }
+  .lead b { color:var(--ac); }
+  .player { background:#0f1211; border-radius:10px; overflow:hidden;
+    box-shadow: 0 12px 32px rgba(15,30,25,.16); }
+  video { display:block; width:100%; height:auto; background:#0f1211; }
+  .meta { display:flex; justify-content:space-between; font-size:12.5px; color:var(--gray);
+    margin:10px 2px 26px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:14px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:8px; padding:16px 18px; }
+  .card h3 { font-size:13.5px; color:var(--ac); letter-spacing:.5px; margin-bottom:6px; }
+  .card p { font-size:13.5px; color:#333; }
+  .note { margin-top:26px; background:#fff; border-left:3px solid var(--ac); border-radius:0 8px 8px 0;
+    padding:14px 18px; font-size:13.5px; color:#333; }
+  .note b { color:var(--ink); }
+  .foot { margin-top:34px; padding-top:16px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:13px; color:var(--gray); }
+  .foot b { color:var(--ink); }
+  a { color:var(--ac); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  @media (max-width:560px){ h1{font-size:20px} .wrap{padding:28px 16px 48px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Unreal Engine 5 · Work Demo</div>
+  <h1>工业机器人与自动化产线数字孪生演示平台</h1>
+  <div class="sub">自研项目，进行中　｜　<b>源码未公开</b>，此页仅作演示与说明</div>
+  <hr>
+
+  <p class="lead">
+    把一条产线的工位布局、机器人与工位设备搬进 UE5，用轨迹数据驱动关节动作，做成可一键播放的单件流程演示。目的是在<b>上真机、上现场之前</b>，先在虚拟场景里把动作、交接和回位演一遍。
+  </p>
+
+  <div class="player">
+    <video src="demo.mp4" poster="poster.jpg" controls preload="metadata" playsinline></video>
+  </div>
+  <div class="meta">
+    <span>48 秒 · 无声 · 画面为 clay 灰模（材质与光照未做）</span>
+    <span>画面已裁去编辑器界面，仅保留 3D 视口与操作面板</span>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>资产与骨架</h3>
+      <p>搬运/移载机器人、机械臂与工位设备 CAD 资源导入 UE，建骨骼层级、刚性网格绑定与关节控制入口。</p>
+    </div>
+    <div class="card">
+      <h3>动作与流程</h3>
+      <p>蓝图 + 动画曲线 + Sequencer 串起机械臂连续动作、AGV 巡游、双机取放协作与多工位流转，收成一条可一键启动的流程演示。</p>
+    </div>
+    <div class="card">
+      <h3>轨迹管线</h3>
+      <p>CSV / XLSX 轨迹离线导入，处理单位配置、非均匀采样重采样、关节方向与偏置，生成 UE 可播放的动画数据。</p>
+    </div>
+    <div class="card">
+      <h3>操作面板</h3>
+      <p>一键运行 / 暂停·继续 / 急停 / 自动跟随 / 完整流程演示，非开发者也能独立播放。</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>边界（我主动标注）</b>：轨迹为示例数据，非真实设备采集；实机零位、方向、限位、TCP、节拍与安全逻辑仍需现场标定。定位是数字化展示与虚拟流程验证，不是真机孪生的完成品。
+  </div>
+
+  <div class="foot">
+    <div><b>印贤聪</b>　齐鲁理工学院 · 智能制造工程 · 本科二年级</div>
+    <div><a href="mailto:195311697@qq.com">195311697@qq.com</a>　·　<a href="https://github.com/ccccongggg">github.com/ccccongggg</a></div>
+  </div>
+</div>
+</body>
+</html>
