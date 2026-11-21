@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#C45A18" />
+<title>项目档案 · 印贤聪 / PROJECT ARCHIVE</title>
+<meta name="description" content="印贤聪的项目档案：机器人整机、硬件与结构设计、AI 应用、赛事工程。12 项，公开仓库直连，私有源码可应要求提供。" />
+<link rel="icon" href="/favicon.ico" />
+<style>
+  :root{
+    --bg:#0a0a0b; --panel:#121214; --panel-2:#17171a;
+    --line:rgba(255,255,255,.09); --line-strong:rgba(255,255,255,.18);
+    --txt:#e8e6e1; --dim:#8e8a84; --dim-2:#6b6862; --accent:#C45A18;
+    --mono:"SFMono-Regular",ui-monospace,"JetBrains Mono",Menlo,Consolas,"Courier New",monospace;
+    --sans:"Inter","HarmonyOS Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--txt); font-family:var(--sans);
+    font-size:15px; line-height:1.7; letter-spacing:.01em;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.022) 0 1px, transparent 1px 96px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.022) 0 1px, transparent 1px 96px);
+    background-attachment:fixed;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+
+  /* ── top bar ── */
+  .topbar{
+    position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);
+    background:rgba(10,10,11,.82);border-bottom:1px solid var(--line);
+  }
+  .topbar-in{max-width:1180px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+  .brand b{color:var(--txt);font-weight:500}
+  .navs{display:flex;gap:20px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--dim)}
+  .navs a:hover{color:var(--accent)}
+  .navs a.home{border:1px solid var(--line-strong);padding:5px 12px;border-radius:2px;color:var(--txt)}
+  .navs a.home:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ── header ── */
+  header.hero{padding:76px 0 44px;border-bottom:1px solid var(--line)}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--accent);text-transform:uppercase}
+  h1{font-size:clamp(34px,5.4vw,62px);line-height:1.06;margin:18px 0 0;font-weight:600;letter-spacing:-.02em}
+  h1 .slash{color:var(--accent)}
+  .sub{max-width:640px;margin-top:18px;color:var(--dim);font-size:15px}
+  .stats{display:flex;flex-wrap:wrap;gap:0;margin-top:38px;border-top:1px solid var(--line)}
+  .stat{flex:1 1 150px;padding:16px 18px 0;border-right:1px solid var(--line)}
+  .stat:last-child{border-right:0}
+  .stat .n{font-family:var(--mono);font-size:26px;line-height:1;color:var(--txt)}
+  .stat .k{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--dim-2);text-transform:uppercase;margin-top:8px;display:block}
+
+  /* ── section ── */
+  section.group{padding:56px 0 8px}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:26px}
+  .sec-no{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.16em}
+  .sec-title{font-size:19px;font-weight:600;letter-spacing:.02em;margin:0}
+  .sec-en{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim-2);text-transform:uppercase}
+  .sec-rule{flex:1;height:1px;background:var(--line);transform:translateY(-6px)}
+
+  /* ── grid ── */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(336px,1fr));gap:16px}
+  .card{
+    position:relative;display:flex;flex-direction:column;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line);border-radius:3px;padding:24px 22px 20px;
+    transition:border-color .25s ease,transform .25s ease,background .25s ease;
+  }
+  .card::before{content:"";position:absolute;left:-1px;top:16px;width:2px;height:0;background:var(--accent);transition:height .3s ease}
+  .card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+  .card:hover::before{height:calc(100% - 32px)}
+  .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .idx{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--dim-2)}
+  .badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--line-strong);border-radius:2px;color:var(--dim)}
+  .badge.pub{color:#8fbf8a;border-color:rgba(143,191,138,.35)}
+  .badge.pri{color:var(--accent);border-color:rgba(196,90,24,.4)}
+  .card h3{margin:0;font-size:20px;line-height:1.35;font-weight:600;letter-spacing:.005em}
+  .card .en{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim-2);text-transform:uppercase;margin-top:6px;display:block}
+  .card p.desc{margin:14px 0 0;font-size:14px;color:#b7b3ac;line-height:1.75;flex:1}
+  .role{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+  .role .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim-2);text-transform:uppercase;display:block;margin-bottom:8px}
+  .role ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+  .role li{font-size:13px;color:#9d9992;display:flex;gap:8px}
+  .role li::before{content:"—";color:var(--accent);flex:none;opacity:.7}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+  .tag{font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:3px 8px;border:1px solid var(--line);color:var(--dim);border-radius:2px}
+  .card-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .open{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--txt);border-bottom:1px solid var(--accent);padding-bottom:2px}
+  .open:hover{color:var(--accent)}
+  .locked{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--dim-2)}
+  .lock-note{font-size:12px;color:var(--dim-2);margin-top:10px}
+
+  /* ── footer ── */
+  footer{border-top:1px solid var(--line);margin-top:64px;padding:38px 0 70px}
+  .foot-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:32px}
+  .foot-grid h4{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim-2);text-transform:uppercase;margin:0 0 10px;font-weight:500}
+  .foot-grid .big{font-size:22px;font-weight:600;line-height:1.4}
+  .foot-mail{font-family:var(--mono);font-size:13px;color:var(--dim);margin-top:8px;word-break:break-all}
+  .foot-note{color:var(--dim-2);font-size:12px;line-height:1.8;margin-top:18px}
+  .backtop{display:inline-block;margin-top:26px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--dim);border-bottom:1px solid var(--line-strong);padding-bottom:3px}
+  .backtop:hover{color:var(--accent);border-color:var(--accent)}
+
+  @media (max-width:640px){
+    .wrap,.topbar-in{padding-left:18px;padding-right:18px}
+    header.hero{padding-top:52px}
+    .stats{flex-wrap:wrap}
+    .stat{flex:1 1 45%;border-bottom:1px solid var(--line);padding-bottom:14px}
+    .foot-grid{grid-template-columns:1fr}
+    .navs{gap:14px;font-size:11px}
+    .navs .hide-m{display:none}
+  }
+  @media print{
+    body{background:#fff;color:#111;background-image:none}
+    .topbar,.backtop,.card-foot{display:none}
+    .card{border:1px solid #ddd;background:#fff;break-inside:avoid}
+    .card p.desc,.role li{color:#333}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand"><b>YIN XIANCONG</b> / PROJECT ARCHIVE</div>
+    <nav class="navs">
+      <a class="hide-m" href="/resume.html">简历 RESUME</a>
+      <a class="hide-m" href="/knowledge-base.html">知识库 KB</a>
+      <a class="home" href="/">← 主页 HOME</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">// ARCHIVE · 2024 — 2026</div>
+    <h1>项目档案<span class="slash"> / </span>13 项</h1>
+    <p class="sub">
+      这里是我所有真正动过手的东西：机器人整机、硬件与结构、AI 应用、赛事工程。
+      公开仓库直接点开看源码；标 <span style="color:var(--accent)">PRIVATE</span> 的项目源码未公开，
+      但每一件我都能当场讲清方案、画清结构、跑通流程——需要看代码直接找我，随时开只读或打包给你。
+    </p>
+    <div class="stats">
+      <div class="stat"><span class="n">13</span><span class="k">Projects</span></div>
+      <div class="stat"><span class="n">09</span><span class="k">Public Repo</span></div>
+      <div class="stat"><span class="n">04</span><span class="k">Provincial+ Awards</span></div>
+      <div class="stat"><span class="n">01</span><span class="k">PCB Certified</span></div>
+    </div>
+  </header>
+
+  <!-- 01 机器人整机 -->
+  <section class="group">
+    <div class="sec-head">
+      <span class="sec-no">01</span>
+      <h2 class="sec-title">机器人整机</h2>
+      <span class="sec-en">Robot Systems</span>
+      <span class="sec-rule"></span>
+    </div>
+    <div class="grid">
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 001</span><span class="badge pub">PUBLIC</span></div>
+        <h3>YiBao 桌面机器人</h3>
+        <span class="en">Desktop Robot · ESP32-S3</span>
+        <p class="desc">一个会转头看人的桌面小家伙：ESP32-S3 跑舵机控制固件，Insta360 Link2 云台做视觉跟踪，外壳自己建模、自己打印。目标是把「看得见的表情 + 跟得上的视线」做进一个能摆在桌上的实物。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>ESP32-S3 舵机控制固件与串口联调</li>
+            <li>云台视觉跟踪链路：UVC 取流 → 人脸框 → 舵机角度</li>
+            <li>外壳三视图、建模与 3D 打印落地</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">ESP32-S3</span><span class="tag">Servo</span><span class="tag">Vision Tracking</span><span class="tag">3D Print</span></div>
+        <div class="card-foot">
+          <a class="open" href="https://github.com/ccccongggg/YiBao" target="_blank" rel="noopener">打开仓库 REPO ↗</a>
+          <span class="locked">固件 + 外壳</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 002</span><span class="badge pub">PUBLIC</span></div>
+        <h3>智巡澜工 · 生化池巡检人形机器人</h3>
+        <span class="en">Wastewater Basin Inspection Biped</span>
+        <p class="desc">机械工程创新创意大赛作品：面向污水处理厂生化池的智能巡检与采样人形机器人。从方案文本、整机 CAD 到实物装配与演示视频，全套自己跑完——这也是我三视图、装配体和工程图能力最集中的一次落地。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>整机结构与三维装配（SolidWorks / STEP / STL）</li>
+            <li>关键部件：三指夹爪、灵犀电机、激光雷达、D435 相机</li>
+            <li>设计方案、作品说明书、研究报告与答辩演示</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">SolidWorks</span><span class="tag">人形机器人</span><span class="tag">装配体</span><span class="tag">国赛作品</span></div>
+        <div class="card-foot">
+          <a class="open" href="https://github.com/ccccongggg/national-mechanical-innovation-competition" target="_blank" rel="noopener">打开仓库 REPO ↗</a>
+          <span class="locked">CAD + 文档</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 003</span><span class="badge pub">PUBLIC</span></div>
+        <h3>GalbotCare 老年陪伴看护</h3>
+        <span class="en">Elderly Care Companion Robot</span>
+        <p class="desc">把一台移动底盘变成「陪老人说话、看得见状态」的看护终端：数字孪生模型、Web 控制台、表情显示套件三块拼在一起，先让远程的人看得懂现场。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>数字孪生侧：URDF / MJCF 模型与 RViz 可视化</li>
+            <li>Web 控制台：状态回传与操作入口</li>
+            <li>表情显示套件的外观与驱动联调</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">Digital Twin</span><span class="tag">URDF / MJCF</span><span class="tag">Web Console</span></div>
+        <div class="card-foot">
+          <a class="open" href="https://github.com/ccccongggg/GalbotCare" target="_blank" rel="noopener">打开仓库 REPO ↗</a>
+          <span class="locked">孪生 + 控制台</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 02 硬件与结构 -->
+  <section class="group">
+    <div class="sec-head">
+      <span class="sec-no">02</span>
+      <h2 class="sec-title">硬件与结构设计</h2>
+      <span class="sec-en">Hardware &amp; Structure</span>
+      <span class="sec-rule"></span>
+    </div>
+    <div class="grid">
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 004</span><span class="badge pri">PRIVATE</span></div>
+        <h3>小球平衡控制装置</h3>
+        <span class="en">Ball-Balancing Control Rig</span>
+        <p class="desc">全国大学生电子设计竞赛作品：一块模块化母板，传感器做成可拔插模块；MaixCAM 看球、步进电机带齿轮传动去纠正倾角，让水管里的小球维持动态平衡。核心是「看得准 + 纠得快」。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>模块化母板 PCB 设计与板间通讯</li>
+            <li>视觉识别 → 倾角指令的闭环控制</li>
+            <li>机械传动与整机联调</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">PCB</span><span class="tag">MaixCAM</span><span class="tag">闭环控制</span><span class="tag">国赛</span></div>
+        <div class="card-foot">
+          <span class="locked">源码私有 · 可应要求提供</span>
+          <span class="locked">PRIVATE</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 005</span><span class="badge pri">PRIVATE</span></div>
+        <h3>负压循迹智能车</h3>
+        <span class="en">Negative-Pressure Line Follower</span>
+        <p class="desc">全国大学生智能汽车竞赛作品：自研 70×50mm 一体化核心板，把运放、MCU、MPU6050、电源全塞进一张板；负压电机把车吸在地面上跑，电感信号进 ADC 直接控电机。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>一体化核心板原理图 / PCB / 打样验证</li>
+            <li>电感采集与 ADC 循迹算法</li>
+            <li>负压结构与整车站姿调试</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">4 层 PCB</span><span class="tag">MPU6050</span><span class="tag">ADC 循迹</span><span class="tag">智能车</span></div>
+        <div class="card-foot">
+          <span class="locked">源码私有 · 可应要求提供</span>
+          <span class="locked">PRIVATE</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 006</span><span class="badge pri">PRIVATE</span></div>
+        <h3>机电创新 · 三维设计与实物</h3>
+        <span class="en">Mechatronics 3D Build · Provincial 2nd</span>
+        <p class="desc">山东省机电产品创新设计大赛作品，省级二等奖。我担任三维设计负责人：从建模、装配到把图纸变成能动的实物，全程跟到现场答辩。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>三维建模与装配体设计（三维设计负责人）</li>
+            <li>零件出图、加工对接与实物装配</li>
+            <li>答辩材料与现场演示</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">三维设计</span><span class="tag">装配</span><span class="tag">省二等奖</span></div>
+        <div class="card-foot">
+          <span class="locked">源码私有 · 可应要求提供</span>
+          <span class="locked">PRIVATE</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 007</span><span class="badge pri">PRIVATE</span></div>
+        <h3>先进成图 · 主赛项 + 轻量化</h3>
+        <span class="en">Advanced Drawing · Main + Lightweight</span>
+        <p class="desc">全国大学生先进成图大赛：既要拼机械成图的速度与规范（团体三等奖），也做了轻量化设计分赛项——把 AI 辅助轻量化、运动分析、受力分析与拓扑优化串成一条完整流程（省级二等奖）。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>主赛项机械成图与装配表达</li>
+            <li>轻量化分赛项：拓扑优化 + 受力/运动分析</li>
+            <li>AI 辅助设计流程实践</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">拓扑优化</span><span class="tag">受力分析</span><span class="tag">AI 设计</span><span class="tag">省二等奖</span></div>
+        <div class="card-foot">
+          <span class="locked">源码私有 · 可应要求提供</span>
+          <span class="locked">PRIVATE</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 03 软件与 AI -->
+  <section class="group">
+    <div class="sec-head">
+      <span class="sec-no">03</span>
+      <h2 class="sec-title">软件与 AI 应用</h2>
+      <span class="sec-en">Software &amp; AI</span>
+      <span class="sec-rule"></span>
+    </div>
+    <div class="grid">
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 008</span><span class="badge pub">PUBLIC</span></div>
+        <h3>问全 · 实时访谈助手</h3>
+        <span class="en">Wenquan · Interview Copilot</span>
+        <p class="desc">给智能眼镜 + 手机用的实时访谈副驾：流式 ASR 一边转写，一边判断「现在是谁在说话」，再把追问建议推给你；会后自动归纳导出。v0.6.0 起做了声纹识别与多人建档。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>流式转写与角色判断链路</li>
+            <li>实时追问建议与会后结构化导出</li>
+            <li>声纹识别、多人身份建档的方案与联调</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">Streaming ASR</span><span class="tag">Voiceprint</span><span class="tag">WebSocket</span><span class="tag">AI 硬件</span></div>
+        <div class="card-foot">
+          <a class="open" href="https://github.com/ccccongggg/wenquan-interview-copilot" target="_blank" rel="noopener">打开仓库 REPO ↗</a>
+          <span class="locked">v0.6.0</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 009</span><span class="badge pub">PUBLIC</span></div>
+        <h3>易搭 YIDA · 电子衣橱</h3>
+        <span class="en">YIDA · Digital Wardrobe</span>
+        <p class="desc">一个不联网也能用的穿搭工具：五种玩法采集当天状态，规则引擎从你的衣橱里组合出 4 套搭配。本地优先 H5 + Capacitor 安卓壳，零构建工具、零后端依赖。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>规则引擎与搭配组合逻辑</li>
+            <li>本地优先数据层与安卓壳打包</li>
+            <li>界面与交互实现</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">H5</span><span class="tag">Capacitor</span><span class="tag">Rule Engine</span><span class="tag">Offline-first</span></div>
+        <div class="card-foot">
+          <a class="open" href="https://github.com/ccccongggg/yida-wardrobe" target="_blank" rel="noopener">打开仓库 REPO ↗</a>
+          <span class="locked">Android 壳</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 010</span><span class="badge pub">PUBLIC</span></div>
+        <h3>弦养 · 八段锦 × 古琴五声</h3>
+        <span class="en">Xianyang · Baduanjin Healing H5</span>
+        <p class="desc">把八段锦做成能在摄像头前跟练的疗愈 H5：MediaPipe Pose 判定八式动作是否到位，古琴五声按文化内核做成可插拔的「处方」，曲库与素材全部离线。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>八式动作判定（MediaPipe Pose 关键点规则）</li>
+            <li>原生 Web Audio 的声音处方调度</li>
+            <li>离线素材与设计交付位组织</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">MediaPipe Pose</span><span class="tag">Web Audio</span><span class="tag">Vite + Vue</span><span class="tag">纯前端</span></div>
+        <div class="card-foot">
+          <a class="open" href="https://github.com/ccccongggg/xianyang-s4" target="_blank" rel="noopener">打开仓库 REPO ↗</a>
+          <span class="locked">离线可跑</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 011</span><span class="badge pub">PUBLIC</span></div>
+        <h3>场景炼金师 · 同帖千面</h3>
+        <span class="en">Scene Alchemist · Zhihu Hackathon</span>
+        <p class="desc">知乎黑客松作品：把一条好帖迁移到你自己的真实场景里——先抽取观点结构，再按你的处境重写，最后给出可执行的落地动作。前端 + LLM 工作流两端都在这个仓里。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>抽取 / 迁移 / 差异比对三段 Prompt 链路</li>
+            <li>后端服务与星图原型</li>
+            <li>前端交互与结果呈现</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">LLM 工作流</span><span class="tag">FastAPI</span><span class="tag">Vue</span><span class="tag">黑客松</span></div>
+        <div class="card-foot">
+          <a class="open" href="https://github.com/ccccongggg/scene-alchemist" target="_blank" rel="noopener">打开仓库 REPO ↗</a>
+          <span class="locked">知乎黑客松</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 04 赛事工程 -->
+  <section class="group">
+    <div class="sec-head">
+      <span class="sec-no">04</span>
+      <h2 class="sec-title">赛事工程与工具</h2>
+      <span class="sec-en">Competition &amp; Tooling</span>
+      <span class="sec-rule"></span>
+    </div>
+    <div class="grid">
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 012</span><span class="badge pub">PUBLIC</span></div>
+        <h3>实验室安全通行 Skill</h3>
+        <span class="en">Lab Safety Pass · SkillHub</span>
+        <p class="desc">SkillHub「宝藏母校」大赛作品：把实验室安全准入做成一个能对话、能出题的 Skill——分级 SOP、题库、培训卡片生成脚本，让新生真的愿意看完再进实验室。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>L1 / L2 分级 SOP 与题库设计</li>
+            <li>Python 培训卡片生成脚本</li>
+            <li>提交材料与演示</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">Python</span><span class="tag">Skill 设计</span><span class="tag">校园工具</span></div>
+        <div class="card-foot">
+          <a class="open" href="https://github.com/ccccongggg/qilu-lab-safety-skill" target="_blank" rel="noopener">打开仓库 REPO ↗</a>
+          <span class="locked">参赛作品</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="idx">IDX / 013</span><span class="badge pub">PUBLIC</span></div>
+        <h3>校园社群知识库</h3>
+        <span class="en">QLIT Community KB</span>
+        <p class="desc">齐鲁理工学院 WorkBuddy 校园社群的知识库：Hexo + Butterfly 主题 + Sveltia CMS 在线后台，非技术同学也能自己发文，不用碰命令行。</p>
+        <div class="role">
+          <span class="lbl">我的分工</span>
+          <ul>
+            <li>站点架构与主题二次开发</li>
+            <li>CMS 在线后台接入与权限</li>
+            <li>内容结构与维护文档</li>
+          </ul>
+        </div>
+        <div class="tags"><span class="tag">Hexo</span><span class="tag">Sveltia CMS</span><span class="tag">社群运营</span></div>
+        <div class="card-foot">
+          <a class="open" href="https://github.com/ccccongggg/qlit-community-kb" target="_blank" rel="noopener">打开仓库 REPO ↗</a>
+          <span class="locked">在线后台</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-grid">
+      <div>
+        <h4>About this archive</h4>
+        <div class="big">源码不是全部，能讲清、能重跑、能量产才是。</div>
+        <p class="foot-note">
+          标注 PRIVATE 的四个项目（电赛、智能车、机电创新、成图）源码未公开，
+          如果你的评审需要看代码，告诉我一声，我可以开私有仓库只读链接或直接打包发你；
+          面试时也可以屏幕共享，从原理图一路跑到实物。
+        </p>
+        <a class="backtop" href="/">← 返回主页 BACK TO HOME</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p class="foot-note" style="margin-top:0">需要项目细节、代码或实物照片，直接找我。</p>
+        <p class="foot-mail">195311697@qq.com</p>
+        <p class="foot-note">GitHub · github.com/ccccongggg</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
