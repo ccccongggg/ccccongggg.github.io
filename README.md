@@ -9,6 +9,7 @@
 | 页面 | 地址 | 内容 |
 |---|---|---|
 | 主页 | <https://ccccongggg.github.io> | 自我介绍、项目精选、技术栈与联系方式 |
+| 项目档案 | <https://ccccongggg.github.io/projects.html> | 13 个项目的分工、技术栈与源码状态 |
 | 简历 | <https://ccccongggg.github.io/resume.html> | 竞赛、认证与项目经历 |
 | 知识库 | <https://ccccongggg.github.io/knowledge-base.html> | 学习与项目笔记索引 |
 | 后台管理 | <https://ccccongggg.github.io/admin.html> | CMS 内容维护后台 |
@@ -18,6 +19,7 @@
 ```
 ccccongggg.github.io/
 ├── index.html            # 主页
+├── projects.html        # 项目档案（13 项，公开仓直连 / 私有源码可应要求提供）
 ├── resume.html          # 简历页
 ├── knowledge-base.html   # 知识库页
 ├── admin.html           # 在线内容管理后台
