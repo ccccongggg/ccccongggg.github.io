@@ -505,7 +505,7 @@ window.SITE_CONTENT = {
           "MaixCAM",
           "步进电机"
         ],
-        "link": "https://github.com/ccccongggg/national-electronic-design-competition",
+        "link": "/projects.html",
         "thumb": "",
         "video": ""
       },
@@ -523,7 +523,7 @@ window.SITE_CONTENT = {
           "ADC",
           "智能车"
         ],
-        "link": "https://github.com/ccccongggg/national-smart-car-competition",
+        "link": "/projects.html",
         "thumb": "",
         "video": ""
       },
@@ -541,7 +541,7 @@ window.SITE_CONTENT = {
           "机械",
           "省二等奖"
         ],
-        "link": "https://github.com/ccccongggg/national-electromechanical-product-design-competition",
+        "link": "/projects.html",
         "thumb": "",
         "video": ""
       },
@@ -559,7 +559,7 @@ window.SITE_CONTENT = {
           "AI 应用",
           "拓扑优化"
         ],
-        "link": "https://github.com/ccccongggg/national-advanced-drawing-competition",
+        "link": "/projects.html",
         "thumb": "",
         "video": ""
       }
